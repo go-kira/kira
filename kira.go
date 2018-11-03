@@ -128,8 +128,8 @@ func getEnv() string {
 }
 
 func getConfig() *kon.Kon {
-	var files = []string{"./config/application.kon"}
-	var env = fmt.Sprintf("./config/environments/%s.kon", getEnv())
+	var files = []string{"./config/application.yaml"}
+	var env = fmt.Sprintf("./config/environments/%s.yaml", getEnv())
 
 	if _, err := os.Stat(env); !os.IsNotExist(err) {
 		files = append(files, env)
