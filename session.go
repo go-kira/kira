@@ -1,7 +1,7 @@
 package kira
 
 import (
-	"github.com/Lafriakh/kira/session"
+	"github.com/go-kira/kira/session"
 	"github.com/go-kira/kon"
 )
 

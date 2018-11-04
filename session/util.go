@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Lafriakh/kira/helpers"
+	"github.com/go-kira/kira/helpers"
 	"github.com/go-kira/kon"
 )
 

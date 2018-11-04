@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Lafriakh/kira/session"
-	"github.com/Lafriakh/kira/validation"
+	"github.com/go-kira/kira/session"
+	"github.com/go-kira/kira/validation"
 	"github.com/go-kira/kog"
 	"github.com/go-kira/kon" // "github.com/Lafriakh/env"
 	"github.com/gorilla/mux"
