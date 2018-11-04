@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Lafriakh/kira"
+	"github.com/go-kira/kira"
 	"github.com/go-kira/kog"
 )
 

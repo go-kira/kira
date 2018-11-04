@@ -1,7 +1,7 @@
 package example
 
 import (
-	"github.com/Lafriakh/kira"
+	"github.com/go-kira/kira"
 )
 
 // Example - kira middleware example.

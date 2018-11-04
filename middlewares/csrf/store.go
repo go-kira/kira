@@ -1,7 +1,7 @@
 package csrf
 
 import (
-	"github.com/Lafriakh/kira/helpers"
+	"github.com/go-kira/kira/helpers"
 	"github.com/go-kira/kon"
 	"golang.org/x/net/xsrftoken"
 )

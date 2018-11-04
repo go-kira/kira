@@ -3,7 +3,7 @@ package limitbody
 import (
 	"net/http"
 
-	"github.com/Lafriakh/kira"
+	"github.com/go-kira/kira"
 )
 
 // MB - one MB.

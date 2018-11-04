@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Lafriakh/kira"
-	"github.com/Lafriakh/kira/helpers"
-	"github.com/Lafriakh/kira/session"
+	"github.com/go-kira/kira"
+	"github.com/go-kira/kira/helpers"
+	"github.com/go-kira/kira/session"
 	"github.com/go-kira/kon"
 	"golang.org/x/net/xsrftoken"
 )
