@@ -36,14 +36,14 @@ func (rc *Recover) Handler(next http.Handler) http.Handler {
 
 				// if the debug mode is enabled, add the stack to the error view
 				if rc.App.Configs.GetBool("DEBUG") {
-					rc.View.Data["message"] = r
-					rc.View.Data["frames"] = getFrames(100)
-					rc.View.Render(w, request, "errors/debug")
+					// rc.View.Data["message"] = r
+					// rc.View.Data["frames"] = getFrames(100)
+					// rc.View.Render(w, request, "errors/debug")
 					return
 				}
 
 				// display error page
-				rc.View.Render(w, request, "errors/500")
+				// rc.View.Render(w, request, "errors/500")
 				return
 			}
 		}()
