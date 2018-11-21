@@ -46,6 +46,12 @@ func (a *App) NewRouter() *mux.Router {
 
 	// 404 pages.
 	a.Router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := NewContext(w, r, a.Log)
+		if ctx.WantsJSON() {
+			ctx.JSON("Not Found")
+			return
+		}
+
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	})
