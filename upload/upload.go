@@ -11,7 +11,7 @@ import (
 
 	"github.com/Lafriakh/kira"
 	"github.com/Lafriakh/kira/helpers"
-	"github.com/Lafriakh/log"
+	"github.com/go-kira/kog"
 	"github.com/go-kira/kon"
 )
 
@@ -257,7 +257,7 @@ func writeFile(file multipart.File, dst string) (os.FileInfo, error) {
 	// return file location.
 	fileInfo, err := f.Stat()
 	if err != nil {
-		log.Panic(err)
+		kog.Panic(err)
 	}
 
 	return fileInfo, nil
@@ -289,7 +289,7 @@ func writeImage(file multipart.File, dst string, utype string) (os.FileInfo, err
 	// return file location.
 	fileInfo, err := f.Stat()
 	if err != nil {
-		log.Panic(err)
+		kog.Panic(err)
 	}
 
 	return fileInfo, nil
@@ -300,7 +300,7 @@ func ParseForm(r *http.Request) {
 	// parse the request before upload.
 	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
-		log.Panic(err)
+		kog.Panic(err)
 	}
 
 }

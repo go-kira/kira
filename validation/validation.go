@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Lafriakh/kira/helpers"
+	"github.com/go-kira/kira/helpers"
 )
 
 // Errors

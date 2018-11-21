@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Lafriakh/kira/helpers"
+	"github.com/go-kira/kira/helpers"
 )
 
 // FuncString this for all rules that accept string as value

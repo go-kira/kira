@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-kira/kon"
 
-	"github.com/Lafriakh/kira/helpers"
+	"github.com/go-kira/kira/helpers"
 )
 
 const defaultTemplate = "default"
