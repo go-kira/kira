@@ -22,6 +22,16 @@ func (c *Context) Var(variable string) string {
 	return ""
 }
 
+// Handle Handler any request type.
+func (a *App) Handle(pattern string, ctx ContextFunc) *Route {
+	route := &Route{Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
+		ctx(NewContext(w, req, a.Log))
+	}}
+	a.Routes = append(a.Routes, route)
+
+	return route
+}
+
 // Get request
 func (a *App) Get(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"GET"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
