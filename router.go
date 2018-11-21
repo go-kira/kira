@@ -45,15 +45,10 @@ func (a *App) NewRouter() *mux.Router {
 	}
 
 	// 404 pages.
-	var notFoundHandler http.Handler
-	notFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	a.Router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	})
-	for _, middleware := range a.Middlewares {
-		notFoundHandler = middleware.Handler(notFoundHandler)
-	}
-	a.Router.NotFoundHandler = notFoundHandler
 
 	// return router
 	return a.Router
