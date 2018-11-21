@@ -46,6 +46,11 @@ func (c *Context) Response() http.ResponseWriter {
 	return c.response
 }
 
+// Header - Write http header to the response
+func (c *Context) Header(code int) {
+	c.Response().WriteHeader(code)
+}
+
 // Log - write the log
 func (c *Context) Log() *kog.Logger {
 	return c.Logger
