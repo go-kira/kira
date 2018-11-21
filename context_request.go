@@ -6,12 +6,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Query ...
+// Query - get request query value
 func (c *Context) Query(param string) string {
 	return c.request.URL.Query().Get(param)
 }
 
-// Var - get route variable.
+// Var - get route variable
 func (c *Context) Var(variable string) string {
 	vars := mux.Vars(c.request)
 
@@ -20,6 +20,11 @@ func (c *Context) Var(variable string) string {
 	}
 
 	return ""
+}
+
+// File - Serve file
+func (c *Context) File(name string) {
+	http.ServeFile(c.Response(), c.Request(), name)
 }
 
 // Get request
