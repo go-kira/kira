@@ -7,7 +7,7 @@ func (c *Context) JSON(data interface{}) {
 	c.Response().Header().Set("Content-Type", "application/json")
 
 	// Encode data
-	if err := json.NewEncoder(c.Response()).Encode(&data); err != nil {
+	if err := json.NewEncoder(c.Response()).Encode(data); err != nil {
 		c.Error(err)
 	}
 }
