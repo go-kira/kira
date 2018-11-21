@@ -10,8 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/Lafriakh/log"
 )
 
 // View - struct for views logic.
@@ -66,7 +64,7 @@ func (v *View) Render(w http.ResponseWriter, req *http.Request, templates ...str
 	// parse templates
 	Template, err := template.New(baseTemplate).Funcs(v.FuncMap(req)).ParseFiles(templatesFiles...)
 	if err != nil {
-		log.Panic(err)
+		v.App.Log.Panic(err)
 	}
 
 	// global variables
@@ -120,7 +118,7 @@ func (v *View) FuncMap(req *http.Request) template.FuncMap {
 			// parse the template.
 			tmpl, err := template.New("").Funcs(v.FuncMap(req)).Parse(string(b))
 			if err != nil {
-				log.Panic(err)
+				v.App.Log.Panic(err)
 			}
 			// add global variables to the included template
 			v.Global(req)
@@ -129,7 +127,7 @@ func (v *View) FuncMap(req *http.Request) template.FuncMap {
 			errs := tmpl.Execute(&buffer, v.Data)
 			// check for errors
 			if errs != nil {
-				log.Panic(errs)
+				v.App.Log.Panic(errs)
 			}
 
 			// return the template to the parent template.
@@ -150,7 +148,7 @@ func (v *View) JSON(w http.ResponseWriter, data interface{}) {
 	// parse data to json format
 	response, err := json.Marshal(data)
 	if err != nil {
-		log.Panic(err)
+		v.App.Log.Panic(err)
 	}
 
 	// return json with headers...
