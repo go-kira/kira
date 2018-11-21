@@ -89,7 +89,7 @@ func New() *App {
 
 // Run the framework
 func (a *App) Run() *App {
-	fmt.Printf("%v", hero)
+	a.Log.Infof("%v", hero)
 
 	// parse routes & middlewares
 	a.NewRouter()
