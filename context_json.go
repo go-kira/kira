@@ -2,7 +2,7 @@ package kira
 
 import "encoding/json"
 
-// JSON -
+// JSON - Send response as json.
 func (c *Context) JSON(data interface{}) {
 	c.Response().Header().Set("Content-Type", "application/json")
 
@@ -19,4 +19,13 @@ func (c *Context) WantsJSON() bool {
 	}
 
 	return false
+}
+
+// ParseJSON - convert json from request body to interface.
+func (c *Context) ParseJSON(dst interface{}) {
+	decoder := json.NewDecoder(c.Request().Body)
+	err := decoder.Decode(&dst)
+	if err != nil {
+		c.Error(err)
+	}
 }
