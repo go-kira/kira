@@ -23,8 +23,7 @@ func (c *Context) WantsJSON() bool {
 
 // ParseJSON - convert json from request body to interface.
 func (c *Context) ParseJSON(dst interface{}) {
-	decoder := json.NewDecoder(c.Request().Body)
-	err := decoder.Decode(&dst)
+	err := json.NewDecoder(c.Request().Body).Decode(&dst)
 	if err != nil {
 		c.Error(err)
 	}
