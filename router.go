@@ -31,21 +31,9 @@ func (r *Route) Middleware(middleware Middleware) *Route {
 
 // NewRouter return all routes.
 func (a *App) NewRouter() *mux.Router {
-	for _, route := range a.Routes {
-		var handler http.Handler
-
-		handler = route.HandlerFunc
-
-		// append middlewares.
-		for _, middleware := range a.Middlewares {
-			handler = middleware.Handler(handler)
-		}
-
-		a.Router.Methods(route.Methods...).Path(route.Pattern).Name(route.Name).Handler(handler)
-	}
-
-	// 404 pages.
-	a.Router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// not found handler
+	var notFoundHandler http.Handler
+	notFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := NewContext(w, r, a.Log)
 
 		if ctx.WantsJSON() {
@@ -60,6 +48,25 @@ func (a *App) NewRouter() *mux.Router {
 		http.Error(w, "404 Not Found", http.StatusNotFound)
 		return
 	})
+
+	// build the routes and attach the middlewares to every route.
+	for _, route := range a.Routes {
+		var handler http.Handler
+
+		handler = route.HandlerFunc
+
+		// append middlewares.
+		for _, middleware := range a.Middlewares {
+			handler = middleware.Handler(handler)
+
+			notFoundHandler = middleware.Handler(notFoundHandler)
+		}
+
+		a.Router.Methods(route.Methods...).Path(route.Pattern).Name(route.Name).Handler(handler)
+	}
+
+	// not found handler.
+	a.Router.NotFoundHandler = notFoundHandler
 
 	// return router
 	return a.Router
