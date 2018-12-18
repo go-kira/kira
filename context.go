@@ -61,3 +61,10 @@ func (c *Context) Error(msg ...interface{}) {
 	// Just panic and the recover will come to save us :)
 	panic(fmt.Sprint(msg...))
 }
+
+// Status - Send specific status to the response.
+func (c *Context) Status(code int) {
+	c.Response().WriteHeader(code)
+
+	fmt.Fprint(c.Response(), http.StatusText(code))
+}
