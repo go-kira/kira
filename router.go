@@ -45,8 +45,10 @@ func (a *App) NewRouter() *mux.Router {
 			return
 		}
 
-		http.Error(w, "404 Not Found", http.StatusNotFound)
+		a.View.Render(w, r, "errors/404")
 		return
+		// http.Error(w, "404 Not Found", http.StatusNotFound)
+		// return
 	})
 
 	// build the routes and attach the middlewares to every route.
