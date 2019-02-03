@@ -1,7 +1,7 @@
 package session
 
 import (
-	"github.com/Lafriakh/log"
+	"github.com/go-kira/kog"
 
 	"github.com/google/uuid"
 )
@@ -36,7 +36,7 @@ func (s *Store) loadSession() {
 func (s *Store) ReadFromHandler() SKV {
 	readedData, err := s.Handler.Read(s.GetID())
 	if err != nil {
-		log.Panic(err)
+		kog.Panic(err)
 		return nil
 	}
 
@@ -51,7 +51,7 @@ func (s *Store) ReadFromHandler() SKV {
 	// decode the session data
 	err = DecodeGob(readedData, &data)
 	if err != nil {
-		log.Errorf("session decode: %v", err)
+		kog.Errorf("session decode: %v", err)
 		return make(SKV)
 	}
 
@@ -80,7 +80,7 @@ func (s *Store) Save() {
 	// encode the data from the handler
 	encData, err := EncodeGob(s.Values)
 	if err != nil {
-		log.Panic(err)
+		kog.Panic(err)
 	}
 
 	s.Handler.Write(s.GetID(), encData)

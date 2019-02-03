@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Lafriakh/log"
+	"github.com/go-kira/kog"
 )
 
 // FileHandler ...
@@ -98,8 +98,6 @@ func (f *FileHandler) GC() {
 
 		return nil
 	}); err != nil {
-		log.WithContext(log.Fields{
-			"files": err,
-		}).Error("session garbage collecting")
+		kog.Error("session garbage collecting")
 	}
 }
