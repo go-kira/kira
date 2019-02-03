@@ -11,7 +11,7 @@ func (c *Context) JSON(data interface{}) {
 
 	// Encode data
 	if err := json.NewEncoder(c.Response()).Encode(data); err != nil {
-		c.Panic(err)
+		c.Error(err)
 	}
 }
 
@@ -30,7 +30,7 @@ func (c *Context) ParseJSON(dst interface{}) {
 	if reflect.ValueOf(dst).Kind() == reflect.Ptr {
 		err := json.NewDecoder(c.Request().Body).Decode(dst)
 		if err != nil {
-			c.Panic(err)
+			c.Error(err)
 		}
 	}
 }
