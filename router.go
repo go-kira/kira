@@ -46,7 +46,12 @@ func (a *App) NewRouter() *mux.Router {
 		}
 
 		w.WriteHeader(http.StatusNotFound)
-		a.View.Render(w, r, "errors/404")
+		// Validate if the template exists
+		if a.View.Exists("errors/404") {
+			a.View.Render(w, r, "errors/404")
+		} else {
+			http.Error(w, "404 Not Found", http.StatusNotFound)
+		}
 		return
 	})
 

@@ -44,6 +44,20 @@ func (v *View) AddPath(path string) error {
 	return nil
 }
 
+// Exists validate if a template exists or not
+func (v *View) Exists(tmp string) bool {
+	// templates extention
+	fileSuffix := v.App.Configs.GetDefault("VIEWS_FILE_SUFFIX", ".go.html").(string)
+	// tempaltes path
+	viewPath := v.App.Configs.GetDefault("VIEWS_PATH", "app/views/").(string)
+
+	templatePath := strings.Join([]string{viewPath, tmp, fileSuffix}, "")
+	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
 // Render template
 func (v *View) Render(w http.ResponseWriter, req *http.Request, templates ...string) {
 	// this will be used to catch the error
@@ -51,6 +65,8 @@ func (v *View) Render(w http.ResponseWriter, req *http.Request, templates ...str
 
 	// templates extention
 	fileSuffix := v.App.Configs.GetDefault("VIEWS_FILE_SUFFIX", ".go.html").(string)
+	// tempaltes path
+	viewPath := v.App.Configs.GetDefault("VIEWS_PATH", "app/views/").(string)
 
 	// hold all templates
 	var templatesFiles []string
@@ -61,7 +77,7 @@ func (v *View) Render(w http.ResponseWriter, req *http.Request, templates ...str
 		if _, err := os.Stat(filepath.Join(v.customPath, temp+fileSuffix)); err == nil {
 			templatesFiles = append(templatesFiles, filepath.Join(v.customPath, temp+fileSuffix))
 		} else {
-			templatesFiles = append(templatesFiles, v.App.Configs.GetString("VIEWS_PATH")+temp+fileSuffix)
+			templatesFiles = append(templatesFiles, viewPath+temp+fileSuffix)
 		}
 	}
 
