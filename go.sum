@@ -8,6 +8,8 @@ github.com/go-kira/kog v0.0.0-20180917154418-0a9eb8cd3237 h1:5+TZMjl1sVLP6VhdhE7
 github.com/go-kira/kog v0.0.0-20180917154418-0a9eb8cd3237/go.mod h1:zqGZJHidG6U0e34KJBAtij6d9AW+/dFynky0vyd/H60=
 github.com/go-kira/kog v0.0.0-20181016231056-fad3a48d043b h1:tgs4F63/h5qzB/3IQsNFJUDomXEAW3ZE038pzaFbzxo=
 github.com/go-kira/kog v0.0.0-20181016231056-fad3a48d043b/go.mod h1:zqGZJHidG6U0e34KJBAtij6d9AW+/dFynky0vyd/H60=
+github.com/go-kira/kog v0.0.0 h1:DAzDjiKi2Trk89MgfY17wTh/c4LN3IlgPLc4uV87Woc=
+github.com/go-kira/kog v0.0.0/go.mod h1:zqGZJHidG6U0e34KJBAtij6d9AW+/dFynky0vyd/H60=
 github.com/go-kira/kon v0.0.0-20181013165914-ab8946a5c597 h1:DxYN0WfRs7F+HEGMaiMXMSKWZNxnqTqNzvfFBt8ZjDE=
 github.com/go-kira/kon v0.0.0-20181013165914-ab8946a5c597/go.mod h1:cwFD8HLwUTk0Jr6PZA1Gx2eylCmjVZV7JFs3EqKITkQ=
 github.com/go-kira/kon v0.0.0-20181013202125-fb269f764192 h1:Z0spGbfYQrIPcOze6J6bJhtZ5Zpm5WihQzUBYVG/j/I=
@@ -18,6 +20,8 @@ github.com/go-kira/kon v0.0.0-20181103221750-93ec2d6d8e0a h1:Ll6lqWSM3LwPw+UUwDi
 github.com/go-kira/kon v0.0.0-20181103221750-93ec2d6d8e0a/go.mod h1:pU4cVTPg71Avt9Ue9lcHjJGCHPa9/5fCKaJcC5s7/z4=
 github.com/go-kira/kon v0.0.0-20181103222844-9c2485df6f24 h1:djJ7reNlRxOO8sEe++OZcwFZB60hS1mq8Wr5Knw+qDk=
 github.com/go-kira/kon v0.0.0-20181103222844-9c2485df6f24/go.mod h1:pU4cVTPg71Avt9Ue9lcHjJGCHPa9/5fCKaJcC5s7/z4=
+github.com/go-kira/kon v0.0.0 h1:ZBVoiEgFDTxKxGmV+6NY/RJozVGdiQSCUesbn1UO6aU=
+github.com/go-kira/kon v0.0.0/go.mod h1:pU4cVTPg71Avt9Ue9lcHjJGCHPa9/5fCKaJcC5s7/z4=
 github.com/go-sql-driver/mysql v1.4.0 h1:7LxgVwFb2hIQtMm87NdgAVfXjnt4OePseqT1tKx+opk=
 github.com/go-sql-driver/mysql v1.4.0/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
