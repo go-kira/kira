@@ -49,15 +49,19 @@ func (v *View) Render(w http.ResponseWriter, req *http.Request, templates ...str
 	// this will be used to catch the error
 	buf := &bytes.Buffer{}
 
+	// templates extention
+	fileSuffix := v.App.Configs.GetDefault("VIEWS_FILE_SUFFIX", ".go.html").(string)
+
 	// hold all templates
 	var templatesFiles []string
-	baseTemplate := filepath.Base(templates[0]) + v.App.Configs.GetString("VIEWS_FILE_SUFFIX")
+	baseTemplate := filepath.Base(templates[0]) + fileSuffix
+
 	// loop throw all templates
 	for _, temp := range templates {
-		if _, err := os.Stat(filepath.Join(v.customPath, temp+v.App.Configs.GetString("VIEWS_FILE_SUFFIX"))); err == nil {
-			templatesFiles = append(templatesFiles, filepath.Join(v.customPath, temp+v.App.Configs.GetString("VIEWS_FILE_SUFFIX")))
+		if _, err := os.Stat(filepath.Join(v.customPath, temp+fileSuffix)); err == nil {
+			templatesFiles = append(templatesFiles, filepath.Join(v.customPath, temp+fileSuffix))
 		} else {
-			templatesFiles = append(templatesFiles, v.App.Configs.GetString("VIEWS_PATH")+temp+v.App.Configs.GetString("VIEWS_FILE_SUFFIX"))
+			templatesFiles = append(templatesFiles, v.App.Configs.GetString("VIEWS_PATH")+temp+fileSuffix)
 		}
 	}
 
@@ -109,7 +113,7 @@ func (v *View) FuncMap(req *http.Request) template.FuncMap {
 		},
 		"include": func(filename string) interface{} {
 			// read the template content.
-			b, err := ioutil.ReadFile(v.App.Configs.GetString("VIEWS_PATH") + filename + v.App.Configs.GetString("VIEWS_FILE_SUFFIX"))
+			b, err := ioutil.ReadFile(v.App.Configs.GetString("VIEWS_PATH") + filename + fileSuffix)
 			if err != nil {
 				return nil
 			}
