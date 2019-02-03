@@ -8,17 +8,6 @@ import (
 	"github.com/go-kira/kog"
 )
 
-const basePath = "storage/logs/"
-
-// colors
-// var (
-// yellow = color.New(color.FgYellow).SprintFunc()
-// red   = color.New(color.FgRed).SprintFunc()
-// green = color.New(color.FgGreen).SprintFunc()
-// blue  = color.New(color.FgBlue).SprintFunc()
-// cyan  = color.New(color.FgCyan).SprintFunc()
-// )
-
 // Log - log middleware
 type Log struct {
 	*kira.App
@@ -41,7 +30,7 @@ func (l *Log) Handler(next http.Handler) http.Handler {
 		next.ServeHTTP(statusRecorder, r)
 
 		// logger message
-		// [INFO] [5b15c100-fdd3-482f-ad0c-037d4159d066] 2018/10/17 00:17:26 | [500] GET /seasons?page=1 63.803024ms
+		// [INFO] [5b15c100-fdd3-482f-ad0c-037d4159d066] 2018/10/17 00:17:26 | [500] GET /PATH 63.803024ms
 		l.App.Log.Infof("[%s] %s [%d] %s %s %v",
 			// request id
 			r.Context().Value(l.App.Configs.GetString("SERVER_REQUEST_ID")).(string),
