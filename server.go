@@ -2,6 +2,7 @@ package kira
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -10,9 +11,13 @@ import (
 
 // StartServer - Start kira server
 func (a *App) StartServer() {
+	// Server HOST/PORT
+	host := a.Configs.GetDefault("SERVER_HOST", "127.0.0.1").(string)
+	port := a.Configs.GetDefault("SERVER_PORT", 8080).(int)
+
 	// define the server
 	server := &http.Server{
-		Addr:    a.Configs.GetString("SERVER_HOST") + ":" + strconv.Itoa(a.Configs.GetInt("SERVER_PORT")),
+		Addr:    fmt.Sprintf("%s:%d", host, port),
 		Handler: a.Router,
 	}
 
