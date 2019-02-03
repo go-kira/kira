@@ -112,8 +112,13 @@ func (v *View) FuncMap(req *http.Request) template.FuncMap {
 			return v.App.Configs.Get(key)
 		},
 		"include": func(filename string) interface{} {
+			// templates extention
+			fileSuffix := v.App.Configs.GetDefault("VIEWS_FILE_SUFFIX", ".go.html").(string)
+			// tempaltes path
+			viewPath := v.App.Configs.GetDefault("VIEWS_PATH", "app/views/").(string)
+
 			// read the template content.
-			b, err := ioutil.ReadFile(v.App.Configs.GetString("VIEWS_PATH") + filename + fileSuffix)
+			b, err := ioutil.ReadFile(viewPath + filename + fileSuffix)
 			if err != nil {
 				return nil
 			}
