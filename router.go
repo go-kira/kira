@@ -58,14 +58,15 @@ func (a *App) NewRouter() *mux.Router {
 		// append middlewares.
 		for _, middleware := range a.Middlewares {
 			handler = middleware.Handler(handler)
-
-			// notFoundHandler = middleware.Handler(notFoundHandler)
 		}
 
 		a.Router.Methods(route.Methods...).Path(route.Pattern).Name(route.Name).Handler(handler)
 	}
 
-	// not found handler.
+	// Not found handler.
+	for _, middleware := range a.Middlewares {
+		notFoundHandler = middleware.Handler(notFoundHandler)
+	}
 	a.Router.NotFoundHandler = notFoundHandler
 
 	// return router
