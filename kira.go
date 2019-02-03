@@ -1,5 +1,9 @@
 package kira
 
+// TODO:
+//  - Remove "csrf", "session" from the base code.
+//  - implement "plugin" mechanism.
+
 import (
 	"database/sql"
 	"fmt"
@@ -10,7 +14,7 @@ import (
 	"github.com/go-kira/kira/session"
 	"github.com/go-kira/kira/validation"
 	"github.com/go-kira/kog"
-	"github.com/go-kira/kon" // "github.com/Lafriakh/env"
+	"github.com/go-kira/kon"
 	"github.com/gorilla/mux"
 )
 
