@@ -34,7 +34,7 @@ func (a *App) NewRouter() *mux.Router {
 	// not found handler
 	var notFoundHandler http.Handler
 	notFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := NewContext(w, r, a.Log)
+		ctx := NewContext(w, r, a)
 
 		if ctx.WantsJSON() {
 			ctx.Header(http.StatusNotFound)

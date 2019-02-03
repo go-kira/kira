@@ -27,15 +27,10 @@ func (c *Context) Param(param string) string {
 	return c.Var(param)
 }
 
-// File - Serve file
-func (c *Context) File(name string) {
-	http.ServeFile(c.Response(), c.Request(), name)
-}
-
 // Get request
 func (a *App) Get(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"GET"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 
@@ -45,7 +40,7 @@ func (a *App) Get(pattern string, ctx ContextFunc) *Route {
 // Post request
 func (a *App) Post(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"POST"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 
@@ -55,7 +50,7 @@ func (a *App) Post(pattern string, ctx ContextFunc) *Route {
 // Put request
 func (a *App) Put(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"PUT"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 
@@ -65,7 +60,7 @@ func (a *App) Put(pattern string, ctx ContextFunc) *Route {
 // Delete request
 func (a *App) Delete(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"DELETE"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 
@@ -75,7 +70,7 @@ func (a *App) Delete(pattern string, ctx ContextFunc) *Route {
 // Head request
 func (a *App) Head(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"HEAD"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 
@@ -85,7 +80,7 @@ func (a *App) Head(pattern string, ctx ContextFunc) *Route {
 // Options request
 func (a *App) Options(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"OPTIONS"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 
@@ -95,7 +90,7 @@ func (a *App) Options(pattern string, ctx ContextFunc) *Route {
 // Patch request
 func (a *App) Patch(pattern string, ctx ContextFunc) *Route {
 	route := &Route{Methods: []string{"PATCH"}, Pattern: pattern, HandlerFunc: func(w http.ResponseWriter, req *http.Request) {
-		ctx(NewContext(w, req, a.Log))
+		ctx(NewContext(w, req, a))
 	}}
 	a.Routes = append(a.Routes, route)
 

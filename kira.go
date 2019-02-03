@@ -2,7 +2,8 @@ package kira
 
 // TODO:
 //  - Remove "csrf", "session" from the base code.
-//  - implement "plugin" mechanism.
+//  - Implement "plugin" mechanism.
+//  - We can use "plugin" to provide additional functionalities to the user like: Auth, Cache, Database ORM...
 
 import (
 	"database/sql"

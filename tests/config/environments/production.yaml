@@ -1,0 +1,6 @@
+# App
+DEBUG: false
+
+# Log
+LOG: file
+LOG_LEVEL: debug
