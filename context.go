@@ -62,3 +62,9 @@ func (c *Context) Status(code int) {
 
 	fmt.Fprint(c.Response(), http.StatusText(code))
 }
+
+// Error - stop the request with panic
+func (c *Context) Error(msg ...interface{}) {
+	// Just panic and the recover will come to save us :)
+	panic(fmt.Sprint(msg...))
+}
