@@ -1,5 +1,5 @@
 # App
-SITE_NAME: Sports Here
+SITE_NAME: Kira Framework
 SITE_URL: http://localhost:8080/
 APP_KEY: 9d8b23c2529ced916abaf60599fb31101921768ceea457c5d6c5f0cc930ef6c4
 DEBUG: true
@@ -11,16 +11,16 @@ SERVER_HOST: 0.0.0.0
 SERVER_REQUEST_ID: X-Request-Id
 SERVER_BODY_LIMIT: 32
 
-# Database
-DB_CONNECTION: mongodb
-# if use docker, put here the container name
-DB_HOST: localhost
-DB_PORT: 27017
-DB_DATABASE: sportshere
-DB_USERNAME: ""
-DB_PASSWORD: ""
-DB_PROTOCOL: tcp
-DB_PARAMS: charset=utf8&parseTime=true
+# # Database
+# DB_CONNECTION: mongodb
+# # if use docker, put here the container name
+# DB_HOST: localhost
+# DB_PORT: 27017
+# DB_DATABASE: kira
+# DB_USERNAME: ""
+# DB_PASSWORD: ""
+# DB_PROTOCOL: tcp
+# DB_PARAMS: charset=utf8&parseTime=true
 
 # Log
 # stderr, stdin; stdout, file
