@@ -15,6 +15,7 @@ func setupServer() *httptest.Server {
 
 	app.Get("/kira", func(c *Context) {
 		c.String("Kira")
+		c.Log().Info("Test Log")
 	})
 	app.Get("/kira_template", func(c *Context) {
 		c.View("hello")

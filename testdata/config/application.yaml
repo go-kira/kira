@@ -29,7 +29,7 @@ LOG: file
 LOG_FORMATTER: default
 # debug, info, warn, error, fatal , panic
 LOG_LEVEL: debug
-LOG_FILE: storage/logs/kira.log
+LOG_FILE: testdata/storage/logs/kira.log
 LOG_FILE_MAX_SIZE: 1
 LOG_FILE_MAX_BACKUPS: 3
 LOG_FILE_MAX_AGE: 28
@@ -40,7 +40,7 @@ PAGINATION_TEMPLATE: bulma
 
 # Session
 SESSION_DRIVER: file
-SESSION_FILES: ./storage/framework/sessions
+SESSION_FILES: ./testdata/storage/framework/sessions
 SESSION_COOKIE: kira_session
 SESSION_COOKIE_PATH: /
 SESSION_COOKIE_DOMAIN: ""
@@ -50,9 +50,9 @@ SESSION_COOKIE_HTTP_ONLY: true
 SESSION_EXPIRE_ON_CLOSE: false
 
 # Storage
-STORAGE_PUBLIC_PATH: ./storage/app/
+STORAGE_PUBLIC_PATH: ./testdata/storage/app/
 STORAGE_PUBLIC_URL: storage
-STORAGE_APP: /storage/app/
+STORAGE_APP: /testdata/storage/app/
 
 # Upload
 UPLOAD_MAX_SIZE: 8
