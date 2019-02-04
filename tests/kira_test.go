@@ -78,7 +78,7 @@ func TestTemplateNotExists(t *testing.T) {
 	}
 
 	// Assert
-	if fmt.Sprintf("%s", content) != "not exists" {
+	if fmt.Sprintf("%s", content) != "not existss" {
 		t.Errorf("The response is not equal to: `Kira Template`, is equal to: %s", content)
 	}
 }
