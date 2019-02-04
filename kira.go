@@ -142,3 +142,10 @@ func getConfig() *kon.Kon {
 
 	return kon.NewFromFile(files...)
 }
+
+// LoadConfig load configs from file.
+func (a *App) LoadConfig(path string) {
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		a.Configs = kon.NewFromFile(path)
+	}
+}

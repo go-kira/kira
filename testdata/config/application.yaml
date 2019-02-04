@@ -63,5 +63,5 @@ CSRF_HEADER_NAME: X-CSRF-TOKEN
 CSRF_FIELD_NAME: csrf_token
 
 # Views
-VIEWS_PATH: app/views/
+VIEWS_PATH: testdata/app/views/
 VIEWS_FILE_SUFFIX: .go.html

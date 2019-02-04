@@ -13,7 +13,7 @@ install:
 go_import_path: github.com/go-kira/kira
 
 script:
-  - go test -race -coverprofile=coverage.txt -covermode=atomic ./tests
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s -X fix https://codecov.io/bash)
