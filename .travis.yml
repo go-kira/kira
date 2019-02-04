@@ -14,3 +14,6 @@ go_import_path: github.com/go-kira/kira
 
 script:
   - go test ./tests
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
