@@ -2,6 +2,8 @@ language: go
 sudo: false
 go:
   - 1.11.x
+env:
+  - GO111MODULE=on
 
 install:
   - go mod download
@@ -11,5 +13,3 @@ go_import_path: github.com/go-kira/kira
 
 script:
   - go test ./tests
-
-on_start: false     # default: false
