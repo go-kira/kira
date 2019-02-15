@@ -6,7 +6,6 @@ package kira
 //  - We can use "plugin" to provide additional functionalities to the user like: Auth, Cache, Database ORM...
 
 import (
-	"database/sql"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -56,7 +55,6 @@ type App struct {
 	Log         *kog.Logger
 	Configs     *kon.Kon
 	Env         string
-	DB          *sql.DB
 
 	isTLS bool
 }
