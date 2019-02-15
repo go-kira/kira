@@ -8,6 +8,9 @@ import (
 	"github.com/go-kira/kon"
 )
 
+// TODO:
+//  - Added validation to the context.
+
 // Example:
 // app.Get("/", func (ctx *kira.Context) {
 //

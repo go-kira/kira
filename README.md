@@ -6,3 +6,15 @@
 </p>
 
 Kira micro framework
+
+# Example
+
+    func main() {
+        app := kira.New()
+
+        app.Get("/", func (c *kira.Context) {
+            c.String("Hello, Kira :)")
+        })
+
+        app.Run()
+    }
