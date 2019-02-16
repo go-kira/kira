@@ -57,6 +57,11 @@ func (c *Context) Header(code int) {
 	c.Response().WriteHeader(code)
 }
 
+// Redirect replies to the request with a redirect to url,
+func (c *Context) Redirect(url string, code int) {
+	http.Redirect(c.Response(), c.Request(), url, code)
+}
+
 // Log gets the Log instance.
 func (c *Context) Log() *kog.Logger {
 	return c.Logger
