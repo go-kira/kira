@@ -1,13 +1,31 @@
-<p align="center"><strong>Kira</strong></p>
-
 <p align="center">
-<a href="https://travis-ci.com/go-kira/kira"><img src="https://api.travis-ci.com/go-kira/kira.svg?branch=master" alt="Build Status"></a>
-<a href="https://codecov.io/gh/go-kira/kira"><img src="https://codecov.io/gh/go-kira/kira/branch/master/graph/badge.svg" alt="Code Coverage"/></a>
+  <h1 align="center">Kira</h1>
+  <p align="center">Minimal web framework.</p>
 </p>
 
-Kira micro framework
+<p align="center">
+  <a href="#features">Features</a> |
+  <a href="#installation">Installation</a> |
+  <a href="#getting-started">Getting Started</a> |
+  <a href="#examples">Examples</a> |
+  <a href="#docs">Docs</a>
+  <a href="https://travis-ci.com/go-kira/kira"><img src="https://api.travis-ci.com/go-kira/kira.svg?branch=master" alt="Build Status"></a>
+  <a href="https://codecov.io/gh/go-kira/kira"><img src="https://codecov.io/gh/go-kira/kira/branch/master/graph/badge.svg" alt="Code Coverage"/></a>
+</p>
 
-# Example
+---
+
+**Kira** web framework. Is simply a minimal web framework try to focus in simplicity.
+
+## Features
+
+TODO
+
+## Installation
+
+TODO
+
+## Getting Started
 
     func main() {
         app := kira.New()
@@ -18,3 +36,19 @@ Kira micro framework
 
         app.Run()
     }
+
+## License
+
+Copyright 2019 Lafriakh Rachid <lafriakh.rachid@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
