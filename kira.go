@@ -38,8 +38,6 @@ type App struct {
 	Log         *kog.Logger
 	Configs     *kon.Kon
 	Env         string
-
-	isTLS bool
 }
 
 // New init the framework
@@ -71,7 +69,7 @@ func (a *App) Run() *App {
 	a.NewRouter()
 
 	// validate if the server need tls connection.
-	if !a.isTLS {
+	if !a.Configs.GetBool("server.tls", false) {
 		// Start the server
 		a.StartServer()
 	} else {

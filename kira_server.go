@@ -34,10 +34,13 @@ func (a *App) StartServer() {
 }
 
 // StartTLSServer - start an TLS server provided by: Let's Encrypt.
+// To generate keys:
+//  - openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out server.crt -days 365
+//  - openssl rsa -in keytmp.pem -out server.key
+//  - rm keytmp.pem
 func (a *App) StartTLSServer() {
-	// TODO:
 	server := &http.Server{
-		Addr:    a.Configs.GetString("server.host", "127.0.0.1") + ":" + strconv.Itoa(a.Configs.GetInt("SERVER_PORT", 8080)),
+		Addr:    a.Configs.GetString("server.host", "127.0.0.1") + ":" + strconv.Itoa(a.Configs.GetInt("server.port", 8080)),
 		Handler: a.Router,
 	}
 
@@ -45,8 +48,13 @@ func (a *App) StartTLSServer() {
 	go a.GracefullyShutdown(server)
 
 	// Start server
-	a.Log.Infof("Starting HTTP server, Listening at %q \n", "https://"+server.Addr)
-	if err := server.ListenAndServeTLS("storage/framework/cert/server.crt", "storage/framework/cert/server.key"); err != http.ErrServerClosed {
+	a.Log.Infof("Starting HTTPS server, Listening at %q \n", "https://"+server.Addr)
+
+	// Certificate & Key
+	certificateFile := a.Configs.GetString("server.tls_certificate", "./server.crt")
+	keyFile := a.Configs.GetString("server.tls_key", "./server.key")
+
+	if err := server.ListenAndServeTLS(certificateFile, keyFile); err != http.ErrServerClosed {
 		a.Log.Errorf("%v", err)
 	} else {
 		a.Log.Infof("Server closed!")
@@ -59,17 +67,11 @@ func (a *App) GracefullyShutdown(server *http.Server) {
 	signal.Notify(sigquit, os.Interrupt, os.Kill)
 
 	sig := <-sigquit
-	a.Log.Infof("Caught sig: %+v", sig)
-	a.Log.Infof("Gracefully shutting down server...")
+	a.Log.Infof("Signal to shutdown the server: %+v", sig)
 
 	if err := server.Shutdown(context.Background()); err != nil {
 		a.Log.Fatalf("Unable to shutdown server: %v", err)
 	} else {
 		a.Log.Infof("Server stopped")
 	}
-}
-
-// IsTLS - set the tls to true.
-func (a *App) IsTLS() {
-	a.isTLS = true
 }
