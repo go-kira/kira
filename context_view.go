@@ -12,9 +12,7 @@ import (
 func (c *Context) View(templates ...string) error {
 	buf := &bytes.Buffer{}
 
-	// templates extention
 	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
-	// tempaltes path
 	viewPath := c.Config().GetString("views.path", "app/views/")
 
 	// hold all templates

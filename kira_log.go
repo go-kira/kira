@@ -17,7 +17,7 @@ func setupLogger(config *kon.Kon) *kog.Logger {
 }
 
 func setupWriter(config *kon.Kon) io.Writer {
-	switch config.GetString("LOG") {
+	switch config.GetString("log.log") {
 	case "stderr":
 		return os.Stderr
 	case "stdin":
