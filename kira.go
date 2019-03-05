@@ -4,6 +4,7 @@ package kira
 //  - Remove "csrf", "session" from the base code.
 //  - Implement "plugin" mechanism.
 //  - We can use "plugin" to provide additional functionalities to the user like: Auth, Cache, Database ORM...
+//  - Error wrapper: Error{op: "op.name", err: Error}...
 
 import (
 	"fmt"

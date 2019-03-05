@@ -43,7 +43,7 @@ func (c *Context) View(templates ...string) error {
 }
 
 // Validate if the view exists.
-func (c *Context) viewExists(tmp string) bool {
+func (c *Context) ViewExists(tmp string) bool {
 	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
 	viewPath := c.Config().GetString("views.path", "app/views/")
 

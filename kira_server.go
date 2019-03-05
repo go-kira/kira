@@ -35,9 +35,9 @@ func (a *App) StartServer() {
 
 // StartTLSServer - start an TLS server provided by: Let's Encrypt.
 // To generate keys:
-//  - openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out server.crt -days 365
-//  - openssl rsa -in keytmp.pem -out server.key
-//  - rm keytmp.pem
+//  - openssl genrsa -out server.key 2048
+//  - openssl ecparam -genkey -name secp384r1 -out server.key
+//  - openssl req -new -x509 -sha256 -key server.key -out server.crt -days 3650
 func (a *App) StartTLSServer() {
 	server := &http.Server{
 		Addr:    a.Configs.GetString("server.host", "127.0.0.1") + ":" + strconv.Itoa(a.Configs.GetInt("server.port", 8080)),
