@@ -104,7 +104,7 @@ func getEnv() string {
 }
 
 func getConfig() *kon.Kon {
-	var files = []string{"./config/application.toml"}
+	var files = []string{"./config.toml", "./config/application.toml"}
 	var env = fmt.Sprintf("./config/environments/%s.toml", getEnv())
 
 	if _, err := os.Stat(env); !os.IsNotExist(err) {
