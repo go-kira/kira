@@ -24,6 +24,7 @@ func (c *CSRF) Handler(next http.Handler) http.Handler {
 		csrf.FieldName(c.Configs.GetString("csrf.field_name", "_token")),
 		csrf.RequestHeader(c.Configs.GetString("csrf.header_name", "X-CSRF-Token")),
 		csrf.CookieName(c.Configs.GetString("csrf.cookie_name", "kira_csrf")),
+		csrf.Secure(c.Configs.GetBool("csrf.secure", true)),
 	)
 
 	return CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
