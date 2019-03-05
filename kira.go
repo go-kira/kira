@@ -11,8 +11,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-kira/kira/session"
-	"github.com/go-kira/kira/validation"
 	"github.com/go-kira/kog"
 	"github.com/go-kira/kon"
 	"github.com/gorilla/mux"
@@ -32,26 +30,11 @@ const (
 	GB = 1 << 30
 )
 
-// you can customize this before init.
-var (
-	PathStore    = "./storage"
-	PathApp      = PathStore + "/app"
-	PathResource = "./resources"
-	PathView     = PathResource + "/views"
-	PathSass     = PathResource + "/sass"
-	PathJS       = PathResource + "/javascript"
-	PathSession  = PathStore + "/framework/sessions"
-	PathLogs     = PathStore + "/framework/logs"
-)
-
 // App hold the framework options
 type App struct {
 	Routes      []*Route
 	Middlewares []Middleware
 	Router      *mux.Router
-	View        View
-	Validation  *validation.Validation
-	Session     *session.Session
 	Log         *kog.Logger
 	Configs     *kon.Kon
 	Env         string
@@ -72,16 +55,6 @@ func New() *App {
 
 	// logger
 	app.Log = setupLogger(app.Configs)
-
-	// init view with app instance
-	app.View.Data = make(map[string]interface{})
-	app.View.App = app
-
-	// validation
-	app.Validation = validation.New()
-
-	// session
-	app.Session = setupSession(app.Configs)
 
 	// define a Router
 	app.Router = mux.NewRouter().StrictSlash(true)
@@ -131,19 +104,12 @@ func getEnv() string {
 }
 
 func getConfig() *kon.Kon {
-	var files = []string{"./config/application.yaml"}
-	var env = fmt.Sprintf("./config/environments/%s.yaml", getEnv())
+	var files = []string{"./config/application.toml"}
+	var env = fmt.Sprintf("./config/environments/%s.toml", getEnv())
 
 	if _, err := os.Stat(env); !os.IsNotExist(err) {
 		files = append(files, env)
 	}
 
 	return kon.NewFromFile(files...)
-}
-
-// LoadConfig load configs from file.
-func (a *App) LoadConfig(path string) {
-	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		a.Configs = kon.NewFromFile(path)
-	}
 }

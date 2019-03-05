@@ -11,7 +11,7 @@ import (
 
 func setupLogger(config *kon.Kon) *kog.Logger {
 	logger := kog.New(setupWriter(config), setupFormatter())
-	logger.SetLevel(kog.LevelStrings[config.GetString("LOG_LEVEL")])
+	logger.SetLevel(kog.LevelStrings[config.GetString("log.level", "info")])
 
 	return logger
 }
@@ -47,10 +47,10 @@ func logToFile(config *kon.Kon) io.Writer {
 	// when the file rish the limit, create new one.
 
 	return &lumberjack.Logger{
-		Filename:   config.GetString("LOG_FILE"),
-		MaxSize:    config.GetInt("LOG_FILE_MAX_SIZE"),
-		MaxBackups: config.GetInt("LOG_FILE_MAX_BACKUPS"),
-		MaxAge:     config.GetInt("LOG_FILE_MAX_AGE"),
-		Compress:   config.GetBool("LOG_FILE_MAX_COMPRESS"),
+		Filename:   config.GetString("log.file", "./storage/logs/kira.log"),
+		MaxSize:    config.GetInt("log.file_max_size", 100),
+		MaxBackups: config.GetInt("log.file_max_backups", 3),
+		MaxAge:     config.GetInt("log.file_max_age", 28),
+		Compress:   config.GetBool("file_max_compress", false),
 	}
 }

@@ -3,7 +3,9 @@ package kira
 import (
 	"bytes"
 	"html/template"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
 // View send an html/template with an HTTP reply.
@@ -11,9 +13,9 @@ func (c *Context) View(templates ...string) error {
 	buf := &bytes.Buffer{}
 
 	// templates extention
-	fileSuffix := c.Config().GetDefault("VIEWS_FILE_SUFFIX", ".go.html").(string)
+	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
 	// tempaltes path
-	viewPath := c.Config().GetDefault("VIEWS_PATH", "app/views/").(string)
+	viewPath := c.Config().GetString("views.path", "app/views/")
 
 	// hold all templates
 	var templatesFiles []string
@@ -40,4 +42,17 @@ func (c *Context) View(templates ...string) error {
 	buf.WriteTo(c.Response())
 
 	return nil
+}
+
+// Validate if the view exists.
+func (c *Context) viewExists(tmp string) bool {
+	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
+	viewPath := c.Config().GetString("views.path", "app/views/")
+
+	templatePath := strings.Join([]string{viewPath, tmp, fileSuffix}, "")
+	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }

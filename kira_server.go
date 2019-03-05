@@ -12,8 +12,8 @@ import (
 // StartServer - Start kira server
 func (a *App) StartServer() {
 	// Server HOST/PORT
-	host := a.Configs.GetDefault("SERVER_HOST", "127.0.0.1").(string)
-	port := a.Configs.GetDefault("SERVER_PORT", 8080).(int)
+	host := a.Configs.GetString("server.host", "127.0.0.1")
+	port := a.Configs.GetInt("server.port", 8080)
 
 	// define the server
 	server := &http.Server{
@@ -37,7 +37,7 @@ func (a *App) StartServer() {
 func (a *App) StartTLSServer() {
 	// TODO:
 	server := &http.Server{
-		Addr:    a.Configs.GetString("SERVER_HOST") + ":" + strconv.Itoa(a.Configs.GetInt("SERVER_PORT")),
+		Addr:    a.Configs.GetString("server.host", "127.0.0.1") + ":" + strconv.Itoa(a.Configs.GetInt("SERVER_PORT", 8080)),
 		Handler: a.Router,
 	}
 

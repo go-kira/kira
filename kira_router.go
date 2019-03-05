@@ -2,8 +2,6 @@ package kira
 
 import (
 	"net/http"
-	"os"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -47,12 +45,13 @@ func (a *App) NewRouter() *mux.Router {
 		}
 
 		// Validate if the template exists
-		if a.View.Exists("errors/404") {
+		if ctx.viewExists("errors/404") {
 			w.WriteHeader(http.StatusNotFound)
-			a.View.Render(w, r, "errors/404")
+			ctx.View("errors/404")
 		} else {
 			http.Error(w, "404 Not Found", http.StatusNotFound)
 		}
+
 		return
 	})
 
@@ -165,55 +164,4 @@ func (a *App) PATCH(pattern string, handler http.HandlerFunc) *Route {
 	a.Routes = append(a.Routes, route)
 
 	return route
-}
-
-// // PathPrefix
-// func (a *App) PathPrefix(tpl string, handler http.HandlerFunc) *Route {
-// 	hand := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		a.Router.PathPrefix(tpl).Handler(http.StripPrefix(tpl, http.HandlerFunc(handler)))
-// 	})
-
-// 	route := &Route{HandlerFunc: hand}
-// 	a.Routes = append(a.Routes, route)
-
-// 	return route
-// }
-
-// Redirect to a url
-func (a *App) Redirect(w http.ResponseWriter, req *http.Request, url string) {
-	http.Redirect(w, req, url, 302)
-}
-
-// RedirectWithCode to a url with code
-func (a *App) RedirectWithCode(w http.ResponseWriter, req *http.Request, url string, code int) {
-	http.Redirect(w, req, url, code)
-}
-
-// RedirectWithError to a url
-func (a *App) RedirectWithError(w http.ResponseWriter, req *http.Request, url string, err error) {
-	a.Session.Flash("error", err.Error())
-
-	http.Redirect(w, req, url, 302)
-}
-
-// Abort ...
-func (a *App) Abort(w http.ResponseWriter, req *http.Request, code int) {
-	errorPage := "errors/" + strconv.Itoa(code)
-	// check if the error page template exists
-	if _, err := os.Stat(a.Configs.GetString("VIEWS_PREFIX") + errorPage + a.Configs.GetString("VIEWS_FILE_SUFFIX")); os.IsNotExist(err) {
-		errorPage = "errors/500"
-	}
-
-	w.WriteHeader(code)
-	a.View.Render(w, req, errorPage)
-}
-
-// Query - return a request query value.
-func (a *App) Query(request *http.Request, param string) string {
-	return request.URL.Query().Get(param)
-}
-
-// Var - return a request var value.
-func (a *App) Var(request *http.Request, rvar string) string {
-	return mux.Vars(request)[rvar]
 }
