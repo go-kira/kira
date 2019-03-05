@@ -22,6 +22,7 @@ func (c *CSRF) Handler(next http.Handler) http.Handler {
 	CSRF := csrf.Protect(
 		[]byte(c.Configs.GetString("app.key")),
 		csrf.FieldName(c.Configs.GetString("csrf.field_name", "_token")),
+		csrf.RequestHeader(c.Configs.GetString("csrf.header_name", "X-CSRF-Token")),
 		csrf.CookieName(c.Configs.GetString("csrf.cookie_name", "kira_csrf")),
 	)
 
