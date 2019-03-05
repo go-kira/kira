@@ -71,7 +71,5 @@ func (a *App) GracefullyShutdown(server *http.Server) {
 
 	if err := server.Shutdown(context.Background()); err != nil {
 		a.Log.Fatalf("Unable to shutdown server: %v", err)
-	} else {
-		a.Log.Infof("Server stopped")
 	}
 }
