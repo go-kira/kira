@@ -26,6 +26,8 @@ func (c *CSRF) Handler(next http.Handler) http.Handler {
 	)
 
 	return CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set CSRF into the header.
+		w.Header().Set(c.Configs.GetString("csrf.header_name", "X-CSRF-Token"), csrf.Token(r))
 
 		// Go to the next request
 		next.ServeHTTP(w, r)
