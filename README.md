@@ -27,21 +27,21 @@ TODO
 
 ## Getting Started
 
-    ```go
-    package main
+```go
+package main
 
-    import "github.com/go-kira/kira"
+import "github.com/go-kira/kira"
 
-    func main() {
-        app := kira.New()
+func main() {
+    app := kira.New()
 
-        app.Get("/", func (c *kira.Context) {
-            c.String("Hello, Kira :)")
-        })
+    app.Get("/", func (c *kira.Context) {
+        c.String("Hello, Kira :)")
+    })
 
-        app.Run()
-    }
-    ```
+    app.Run()
+}
+```
 
 ## License
 
