@@ -25,3 +25,16 @@ func (e *Example2) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	next(ctx)
 	ctx.String("After2")
 }
+
+// ContextData
+type ContextData struct{}
+
+func NewContextData() *ContextData {
+	return &ContextData{}
+}
+func (e *ContextData) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
+	// We should see this inside a normal handler that use this middleware.
+	ctx.SetData("foo", "bar")
+
+	next(ctx)
+}
