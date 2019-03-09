@@ -10,7 +10,7 @@ import (
 type Route struct {
 	Method      string
 	Path        string
-	HandlerFunc http.HandlerFunc
+	HandlerFunc HandlerFunc
 	Middlewares []Middleware
 }
 
@@ -31,7 +31,14 @@ func (app *App) RegisterRoutes() *httprouter.Router {
 	// build the routes and attach the middlewares to every route.
 	for _, route := range app.Routes {
 		// Register the route.
-		app.Router.Handler(route.Method, route.Path, route.HandlerFunc)
+		app.Router.Handler(
+			// Method
+			route.Method,
+			// Path
+			route.Path,
+			// Handler
+			buildRoute(app, route.HandlerFunc, route.Middlewares),
+		)
 	}
 
 	// 404
@@ -44,60 +51,39 @@ func (app *App) RegisterRoutes() *httprouter.Router {
 	return app.Router
 }
 
-func defaultNotFound(ctx *Context) {
-	ctx.HeaderStatus(http.StatusNotFound)
-
-	// JSON
-	if ctx.WantsJSON() {
-		// Json response
-		ctx.JSON(struct {
-			Error   int    `json:"error"`
-			Message string `json:"message"`
-		}{http.StatusNotFound, "404 Not Found"})
-		return
-	} else { // HTML
-		// Validate if the template exists
-		if ctx.ViewExists("errors/404") {
-			ctx.View("errors/404")
-		} else {
-			ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
-		}
+// Change the middleware to support middleware chain.
+// This function will take the middleware and the next handler as a parameters.
+// Then return a handler that accept the next handler as a parameter.
+func buildMiddleware(middleware Middleware, next HandlerFunc) HandlerFunc {
+	return func(ctx *Context) {
+		middleware.Middleware(ctx, next)
 	}
 }
 
 // buildRoute create the context for the route and attach the middlwares to it if exists.
-func buildRoute(app *App, handler HandlerFunc, route *Route) http.HandlerFunc {
-	// Change the middleware to support middleware chain.
-	// This function will take the middleware and the next handler as a parameters.
-	// Then return a handler that accept the next handler as a parameter.
-	var middlewareHandler func(Middleware, HandlerFunc) HandlerFunc
-	middlewareHandler = func(middleware Middleware, next HandlerFunc) HandlerFunc {
-		return func(ctx *Context) {
-			middleware.Middleware(ctx, next)
-		}
-	}
-
+func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc {
 	// Route middlewares
-	if route != nil && len(route.Middlewares) > 0 {
-		for _, m := range route.Middlewares {
-			handler = middlewareHandler(m, handler)
+	if len(rm) > 0 {
+		for _, m := range rm {
+			handler = buildMiddleware(m, handler)
 		}
 	}
 
 	// Global Middlewares
-	for _, m := range app.Middlewares {
-		// except := app.Configs.GetSliceString("excluded_middleware." + m.Name())
-		//
-		// // Move to the next router if the route is nil.
-		// if route == nil || helpers.Contains(except, "*") {
-		// 	continue
-		// }
-		//
-		// if !helpers.Contains(except, route.Path) {
-		// 	handler = middlewareHandler(m, handler)
-		// }
-
-		handler = middlewareHandler(m, handler)
+	if len(app.Middlewares) > 0 {
+		for _, m := range app.Middlewares {
+			// except := app.Configs.GetSliceString("excluded_middleware." + m.Name())
+			//
+			// // Move to the next router if the route is nil.
+			// if route == nil || helpers.Contains(except, "*") {
+			// 	continue
+			// }
+			//
+			// if !helpers.Contains(except, route.Path) {
+			// 	handler = middlewareHandler(m, handler)
+			// }
+			handler = buildMiddleware(m, handler)
+		}
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -113,14 +99,13 @@ func buildRoute(app *App, handler HandlerFunc, route *Route) http.HandlerFunc {
 }
 
 // create new route instance.
-func createRoute(app *App, method string, path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+func createRoute(app *App, method string, path string, handler HandlerFunc, middlewares ...Middleware) *Route {
 	route := &Route{
 		Method:      method,
 		Path:        path,
 		Middlewares: middlewares,
+		HandlerFunc: handler,
 	}
-
-	route.HandlerFunc = buildRoute(app, ctx, route)
 
 	// Append the route
 	app.Routes = append(app.Routes, route)

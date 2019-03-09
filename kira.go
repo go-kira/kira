@@ -8,6 +8,7 @@ package kira
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/go-kira/config"
 	"github.com/go-kira/log"
@@ -83,4 +84,26 @@ func (a *App) Run() *App {
 // NotFound custom not found handler.
 func (a *App) NotFound(ctx HandlerFunc) {
 	a.NotFoundHandler = ctx
+}
+
+// default not found handler.
+func defaultNotFound(ctx *Context) {
+	ctx.HeaderStatus(http.StatusNotFound)
+
+	// JSON
+	if ctx.WantsJSON() {
+		// Json response
+		ctx.JSON(struct {
+			Error   int    `json:"error"`
+			Message string `json:"message"`
+		}{http.StatusNotFound, "404 Not Found"})
+		return
+	} else { // HTML
+		// Validate if the template exists
+		if ctx.ViewExists("errors/404") {
+			ctx.View("errors/404")
+		} else {
+			ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
+		}
+	}
 }
