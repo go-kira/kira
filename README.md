@@ -27,9 +27,10 @@ TODO
 
 ## Getting Started
 
+    ```go
     package main
 
-    import "gihub.com/go-kira/kira"
+    import "github.com/go-kira/kira"
 
     func main() {
         app := kira.New()
@@ -40,6 +41,7 @@ TODO
 
         app.Run()
     }
+    ```
 
 ## License
 
