@@ -5,27 +5,24 @@ import (
 )
 
 // Example - kira middleware example.
-type Example struct {
-	*kira.App
+type Example struct{}
+
+// New - a new instance of Example
+func New() *Example {
+	return &Example{}
 }
 
-// NewExample - a new instance of Example
-func NewExample(app *kira.App) *Example {
-	return &Example{app}
+func (e *Example) Name() string {
+	return "example"
 }
 
-// func (m *Example) ServeHTTP(next *http.Handler) *http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		// Before request
-// 		next.ServeHTTP(w, r)
-// 		// After request
-// 	})
-// }
+// Middleware ...
+func (e *Example) Middleware(c *kira.Context, next kira.HandlerFunc) {
+	// Next handlerr
+	c.String("before \n")
 
-// func (m *Example) ServeHTTP(next *kira.Context) *http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		// Before request
-// 		next.ServeHTTP(w, r)
-// 		// After request
-// 	})
-// }
+	next(c)
+
+	c.String("after \n")
+	// next.ServeHTTP(ctx.Response(), ctx.Request())
+}

@@ -2,50 +2,45 @@ package logger
 
 import (
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-kira/kira"
-	"github.com/go-kira/kog"
+	"github.com/go-kira/log"
 )
 
 // Log - log middleware
-type Log struct {
-	*kira.App
-}
+type Log struct{}
 
-// NewLogger ...
-func NewLogger(app *kira.App) *Log {
-	return &Log{app}
+// New ...
+func New() *Log {
+	return &Log{}
 }
 
 // Handler - middleware handler
-func (l *Log) Handler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Start time
-		var now = time.Now()
-		// Store the status code
-		statusRecorder := &statusRecorder{w, http.StatusOK}
+func (l *Log) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
+	// Start time
+	var now = time.Now()
+	// Store the status code
+	statusRecorder := &statusRecorder{ctx.Response(), http.StatusOK}
 
-		// Run the request
-		next.ServeHTTP(statusRecorder, r)
+	// Change the ResponseWriter to our recorder.
+	ctx.SetResponse(statusRecorder)
 
-		// logger message
-		// [INFO] [5b15c100-fdd3-482f-ad0c-037d4159d066] 2018/10/17 00:17:26 | [500] GET /PATH 63.803024ms
-		l.App.Log.Infof("[%s] %s [%d] %s %s %v",
-			// request id
-			r.Context().Value(l.App.Configs.GetString("SERVER_REQUEST_ID")).(string),
-			// time
-			kog.FormatTime(time.Now()),
-			// status code
-			statusRecorder.statusCode,
-			// method
-			r.Method,
-			// request path
-			r.RequestURI,
-			// request duration
-			time.Since(now),
-		)
-	})
+	next(ctx)
+
+	logFormat := ctx.Config().GetString("log.format", ":status :method :time :duration :request_id :path")
+
+	r := strings.NewReplacer(
+		":time", log.FormatTime(time.Now()),
+		":status", strconv.Itoa(statusRecorder.statusCode),
+		":method", ctx.Request().Method,
+		":path", ctx.Request().RequestURI,
+		":duration", time.Since(now).String(),
+		":request_id", ctx.Request().Context().Value(ctx.Config().GetString("server.request_id", "X-Request-Id")).(string),
+	)
+	ctx.Log().Info(r.Replace(logFormat))
 }
 
 type statusRecorder struct {

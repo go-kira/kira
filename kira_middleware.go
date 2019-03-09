@@ -1,23 +1,19 @@
 package kira
 
-import (
-	"net/http"
-)
-
 // Middleware interface
 type Middleware interface {
-	Handler(next http.Handler) http.Handler
+	// Name() string
+	Middleware(*Context, HandlerFunc)
 }
 
-// UseMiddlewares - assign many middlewares
-func (a *App) UseMiddlewares(m []Middleware) {
-	for _, middlware := range m {
-		a.Middlewares = append(a.Middlewares, middlware)
+// Middleware - add the middleware
+func (app *App) Middleware(middlewares ...Middleware) {
+	for _, m := range middlewares {
+		app.Middlewares = append(app.Middlewares, m)
 	}
-	// a.Middlewares = m
 }
 
-// UseMiddleware - add the middleware
-func (a *App) UseMiddleware(m Middleware) {
-	a.Middlewares = append(a.Middlewares, m)
+// Use is an alias of Middleware method.
+func (app *App) Use(middlewares ...Middleware) {
+	app.Middleware(middlewares...)
 }

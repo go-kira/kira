@@ -1,6 +1,7 @@
 package kira
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -19,6 +20,11 @@ func (c *Context) String(s string) {
 	if err != nil {
 		c.Error(err)
 	}
+}
+
+// Stringf formats according to a format specifier and writes the resulting to the request response.
+func (c *Context) Stringf(format string, a ...interface{}) {
+	c.String(fmt.Sprintf(format, a...))
 }
 
 // File send a file with the HTTP reply.

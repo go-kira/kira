@@ -1,4 +1,4 @@
-package kira
+package kira_test
 
 import (
 	"fmt"
@@ -6,21 +6,25 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/go-kira/kira"
 )
 
 // Create a server with initial routes.
 func setupServer() *httptest.Server {
-	app := New()
-	app.LoadConfig("./testdata/config/application.yaml")
+	app := kira.New()
+	// app.LoadConfig("./testdata/config/application.yaml")
 
-	app.Get("/kira", func(c *Context) {
+	app.Get("/kira", func(c *kira.Context) {
 		c.String("Kira")
-		c.Log().Info("Test Log")
 	})
-	app.Get("/kira_template", func(c *Context) {
-		c.View("hello")
+	app.Get("/kira_template", func(c *kira.Context) {
+		err := c.View("hello")
+		if err != nil {
+			c.Error(err)
+		}
 	})
-	app.Get("/kira_template_not_exists", func(c *Context) {
+	app.Get("/kira_template_not_exists", func(c *kira.Context) {
 		if err := c.View("not_exists"); err != nil {
 			c.String("not exists")
 		} else {
@@ -28,7 +32,7 @@ func setupServer() *httptest.Server {
 		}
 	})
 
-	ts := httptest.NewServer(app.NewRouter())
+	ts := httptest.NewServer(app.RegisterRoutes())
 
 	return ts
 }

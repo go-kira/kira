@@ -23,9 +23,13 @@ TODO
 
 ## Installation
 
-TODO
+    go get -u github.com/go-kira/kira
 
 ## Getting Started
+
+    package main
+
+    import "gihub.com/go-kira/kira"
 
     func main() {
         app := kira.New()

@@ -10,25 +10,20 @@ import (
 const MB = 1 << 20
 
 // Limitbody - Middleware.
-type Limitbody struct {
-	*kira.App
-}
+type Limitbody struct{}
 
-// Newlimitbody - return Limitbody instance
-func Newlimitbody(app *kira.App) *Limitbody {
-	return &Limitbody{app}
+// New - return Limitbody instance
+func New() *Limitbody {
+	return &Limitbody{}
 }
 
 // Handler - middelware handler
-func (l *Limitbody) Handler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.ContentLength > l.App.Configs.GetInt64("SERVER_BODY_LIMIT")*MB {
-			http.Error(w, "Request too large", http.StatusExpectationFailed)
-			return
-		}
+func (l *Limitbody) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
+	if ctx.Request().ContentLength > ctx.Config().GetInt64("server.body_limit", 32)*MB {
+		http.Error(ctx.Response(), "Request too large", http.StatusExpectationFailed)
+		return
+	}
+	ctx.Request().Body = http.MaxBytesReader(ctx.Response(), ctx.Request().Body, ctx.Config().GetInt64("server.body_limit", 32)*MB)
 
-		r.Body = http.MaxBytesReader(w, r.Body, l.App.Configs.GetInt64("SERVER_BODY_LIMIT")*MB)
-
-		next.ServeHTTP(w, r)
-	})
+	next(ctx)
 }

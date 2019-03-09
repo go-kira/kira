@@ -2,34 +2,36 @@ package requestid
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/go-kira/kon"
+	"github.com/go-kira/kira"
 	"github.com/google/uuid"
 )
 
 // RequestID struct
-type RequestID struct{ HeaderName string }
+type RequestID struct{}
 
-// NewRequestID - new instance of RequestID.
-func NewRequestID(config *kon.Kon) *RequestID {
-	return &RequestID{
-		HeaderName: config.GetString("SERVER_REQUEST_ID"),
-	}
+// New - new instance of RequestID.
+func New() *RequestID {
+	return &RequestID{}
 }
 
 // Handler - middleware handler
-func (rq *RequestID) Handler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// request id context
-		ctx := context.WithValue(r.Context(), rq.HeaderName, rq.random())
+func (rq *RequestID) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
+	headerName := ctx.Config().GetString("server.request_id", "X-Request-Id")
+	// Request ID
+	requestid := rq.random()
 
-		// set header
-		w.Header().Set(rq.HeaderName, rq.random())
+	// Context
+	requestIDContext := context.WithValue(ctx.Request().Context(), headerName, requestid)
 
-		// next handler
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+	// Set header.
+	ctx.Response().Header().Set(headerName, requestid)
+
+	// Change the request with the new one with context.
+	ctx.SetRequest(ctx.Request().WithContext(requestIDContext))
+
+	// Move to the next handler.
+	next(ctx)
 }
 
 // random return random string for request id

@@ -4,23 +4,22 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-kira/kog"
-	"github.com/go-kira/kon"
+	"github.com/go-kira/log"
+
+	"github.com/go-kira/config"
 )
 
-// ContextFunc - Type to define context function
-type ContextFunc func(*Context)
+// HandlerFunc - Type to define context function
+type HandlerFunc func(*Context)
 
 // Context ...
 type Context struct {
 	request  *http.Request
 	response http.ResponseWriter
-	Logger   *kog.Logger
-	Configs  *kon.Kon
+	Logger   *log.Logger
+	Configs  *config.Config
 	// The data assocaited with the request.
 	data map[string]interface{}
-	// Will hold the response status code.
-	statusCode int
 }
 
 // NewContext - Create new instance of Context
@@ -34,6 +33,16 @@ func NewContext(res http.ResponseWriter, req *http.Request, app *App) *Context {
 	}
 }
 
+// SetRequest change the current request with the given one.
+func (c *Context) SetRequest(r *http.Request) {
+	c.request = r
+}
+
+// SetResponse change the current response with the given one.
+func (c *Context) SetResponse(w http.ResponseWriter) {
+	c.response = w
+}
+
 // Request a Request represents an HTTP request received by a server.
 func (c *Context) Request() *http.Request {
 	return c.request
@@ -45,7 +54,7 @@ func (c *Context) Response() http.ResponseWriter {
 }
 
 // Header Write HTTP header to the response.
-func (c *Context) Header(code int) {
+func (c *Context) HeaderStatus(code int) {
 	c.Response().WriteHeader(code)
 }
 
@@ -55,12 +64,12 @@ func (c *Context) Redirect(url string, code int) {
 }
 
 // Log gets the Log instance.
-func (c *Context) Log() *kog.Logger {
+func (c *Context) Log() *log.Logger {
 	return c.Logger
 }
 
 // Config gets the application configs.
-func (c *Context) Config() *kon.Kon {
+func (c *Context) Config() *config.Config {
 	return c.Configs
 }
 
@@ -72,7 +81,11 @@ func (c *Context) Status(code int) {
 }
 
 // Error stop the request with panic
-func (c *Context) Error(msg ...interface{}) {
+func (c *Context) Error(msg interface{}, status ...int) {
+	if len(status) > 0 {
+		c.HeaderStatus(status[0])
+	}
+
 	// Just panic and the recover will come to save us :)
-	panic(fmt.Sprint(msg...))
+	panic(fmt.Sprint(msg))
 }

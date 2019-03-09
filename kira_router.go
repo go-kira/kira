@@ -3,165 +3,162 @@ package kira
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 )
 
-// Route struct
+// Route represent a route.
 type Route struct {
-	Name        string
-	Methods     []string
-	Pattern     string
+	Method      string
+	Path        string
 	HandlerFunc http.HandlerFunc
+	Middlewares []Middleware
 }
 
-// SetName set the route name.
-func (r *Route) SetName(name string) *Route {
-	r.Name = name
-	return r
+// Middleware add a middleware to the route.
+func (r *Route) Middleware(midd ...Middleware) {
+	for _, middleware := range midd {
+		r.Middlewares = append(r.Middlewares, middleware)
+	}
 }
 
-// Middleware - set a middleware to the route.
-func (r *Route) Middleware(middleware Middleware) *Route {
-	r.HandlerFunc = middleware.Handler(r.HandlerFunc).ServeHTTP
-
-	return r
+// Use is an alias of Middleware method.
+func (r *Route) Use(midd ...Middleware) {
+	r.Middleware(midd...)
 }
 
-// NewRouter return all routes.
-func (a *App) NewRouter() *mux.Router {
-	// not found handler
-	var notFoundHandler http.Handler
-	notFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := NewContext(w, r, a)
+// RegisterRoutes it's simply register the routes into the router.
+func (app *App) RegisterRoutes() *httprouter.Router {
+	// build the routes and attach the middlewares to every route.
+	for _, route := range app.Routes {
+		// Register the route.
+		app.Router.Handler(route.Method, route.Path, route.HandlerFunc)
+	}
 
-		// Return json response
-		if ctx.WantsJSON() {
-			ctx.Header(http.StatusNotFound)
-			ctx.JSON(struct {
-				Error   int    `json:"error"`
-				Message string `json:"message"`
-			}{http.StatusNotFound, "404 not found"})
-			return
-		}
+	// 404
+	if app.NotFoundHandler == nil {
+		app.Router.NotFound = buildRoute(app, defaultNotFound, nil)
+	} else {
+		app.Router.NotFound = buildRoute(app, app.NotFoundHandler, nil)
+	}
 
+	return app.Router
+}
+
+func defaultNotFound(ctx *Context) {
+	ctx.HeaderStatus(http.StatusNotFound)
+
+	// JSON
+	if ctx.WantsJSON() {
+		// Json response
+		ctx.JSON(struct {
+			Error   int    `json:"error"`
+			Message string `json:"message"`
+		}{http.StatusNotFound, "404 Not Found"})
+		return
+	} else { // HTML
 		// Validate if the template exists
 		if ctx.ViewExists("errors/404") {
-			w.WriteHeader(http.StatusNotFound)
 			ctx.View("errors/404")
 		} else {
-			http.Error(w, "404 Not Found", http.StatusNotFound)
+			ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
 		}
+	}
+}
 
-		return
-	})
-
-	// build the routes and attach the middlewares to every route.
-	for _, route := range a.Routes {
-		var handler http.Handler
-
-		handler = route.HandlerFunc
-
-		// append middlewares.
-		for _, middleware := range a.Middlewares {
-			handler = middleware.Handler(handler)
+// buildRoute create the context for the route and attach the middlwares to it if exists.
+func buildRoute(app *App, handler HandlerFunc, route *Route) http.HandlerFunc {
+	// Change the middleware to support middleware chain.
+	// This function will take the middleware and the next handler as a parameters.
+	// Then return a handler that accept the next handler as a parameter.
+	var middlewareHandler func(Middleware, HandlerFunc) HandlerFunc
+	middlewareHandler = func(middleware Middleware, next HandlerFunc) HandlerFunc {
+		return func(ctx *Context) {
+			middleware.Middleware(ctx, next)
 		}
-
-		a.Router.Methods(route.Methods...).Path(route.Pattern).Name(route.Name).Handler(handler)
 	}
 
-	// Not found handler.
-	for _, middleware := range a.Middlewares {
-		notFoundHandler = middleware.Handler(notFoundHandler)
+	// Route middlewares
+	if route != nil && len(route.Middlewares) > 0 {
+		for _, m := range route.Middlewares {
+			handler = middlewareHandler(m, handler)
+		}
 	}
-	a.Router.NotFoundHandler = notFoundHandler
 
-	// return router
-	return a.Router
-}
+	// Global Middlewares
+	for _, m := range app.Middlewares {
+		// except := app.Configs.GetSliceString("excluded_middleware." + m.Name())
+		//
+		// // Move to the next router if the route is nil.
+		// if route == nil || helpers.Contains(except, "*") {
+		// 	continue
+		// }
+		//
+		// if !helpers.Contains(except, route.Path) {
+		// 	handler = middlewareHandler(m, handler)
+		// }
 
-// Static ...
-func (a *App) Static(path, url string) {
-	a.Router.PathPrefix(url).Handler(
-		http.StripPrefix(url,
-			http.FileServer(http.Dir(path)),
-		),
-	)
-}
+		handler = middlewareHandler(m, handler)
+	}
 
-// UseRoutes - assign the routes
-func (a *App) UseRoutes(m []Route) {
-	for _, route := range m {
-		a.Routes = append(a.Routes, &route)
-		// a.Routes[route.Pattern] = &route
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Root context.
+		// TODO
+		//  - Set default values in the context.
+		//  - Like request id, csrf...
+		c := NewContext(w, r, app)
+
+		// Run the chain
+		handler(c)
 	}
 }
 
-// UseRoute for append route to the routes
-func (a *App) UseRoute(m Route) {
-	a.Routes = append(a.Routes, &m)
-	// a.Routes[m.Pattern] = &m
-}
+// create new route instance.
+func createRoute(app *App, method string, path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	route := &Route{
+		Method:      method,
+		Path:        path,
+		Middlewares: middlewares,
+	}
 
-// Methods ...
-func (a *App) Methods(methods []string, pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: methods, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
+	route.HandlerFunc = buildRoute(app, ctx, route)
 
-	return route
-}
-
-// GET request
-func (a *App) GET(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"GET"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
+	// Append the route
+	app.Routes = append(app.Routes, route)
 
 	return route
 }
 
-// POST request
-func (a *App) POST(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"POST"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
-
-	return route
+// Handle GET requests.
+func (app *App) Get(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "GET", path, ctx, middlewares...)
 }
 
-// PUT request
-func (a *App) PUT(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"PUT"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
-
-	return route
+// Handle HEAD requests.
+func (app *App) Head(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "HEAD", path, ctx, middlewares...)
 }
 
-// DELETE request
-func (a *App) DELETE(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"DELETE"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
-
-	return route
+// Handle POST requests.
+func (app *App) Post(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "POST", path, ctx, middlewares...)
 }
 
-// HEAD request
-func (a *App) HEAD(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"HEAD"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
-
-	return route
+// Handle PUT requests.
+func (app *App) Put(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "PUT", path, ctx, middlewares...)
 }
 
-// OPTIONS request
-func (a *App) OPTIONS(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"OPTIONS"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
-
-	return route
+// Handle PATCH requests.
+func (app *App) Patch(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "PATCH", path, ctx, middlewares...)
 }
 
-// PATCH request
-func (a *App) PATCH(pattern string, handler http.HandlerFunc) *Route {
-	route := &Route{Methods: []string{"PATCH"}, Pattern: pattern, HandlerFunc: handler}
-	a.Routes = append(a.Routes, route)
+// Handle OPTIONS requests.
+func (app *App) Options(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "OPTIONS", path, ctx, middlewares...)
+}
 
-	return route
+// Handle ServeFiles requests.
+func (app *App) ServeFiles(path string, root http.FileSystem) {
+	app.Router.ServeFiles(path, root)
 }

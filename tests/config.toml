@@ -1,0 +1,44 @@
+[app]
+name  = ""
+key   = ""
+debug = true
+
+[server]
+tls             = false
+host            = "127.0.0.1"
+port            = 8080
+body_limit      = 32
+request_id      = "X-Request-Id"
+tls_certificate = "./server.crt"
+tls_key         = "./server.key"
+
+[upload]
+path = "./storage"
+
+[views]
+file_suffix = ".go.html"
+path = "./app/views/"
+
+[log]
+log               = "stderr" # stderr, stdin, stdout, file
+level             = "debug" # debug, info, warn, error, fatal , panic
+format            = ":status :method :time :duration :request_id :path"
+file              = "./storage/logs/kira.log"
+file_max_size     = 100
+file_max_backups  = 3
+file_max_age      = 28
+file_max_compress = false
+
+[csrf]
+header_name = "X-CSRF-Token"
+field_name  = "_token"
+cookie_name = "kira_csrf"
+secure      = true
+
+[jwt]
+lookup = "header:Authorization"
+
+[excluded_middleware]
+example = [
+    "*",
+]

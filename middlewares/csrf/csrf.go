@@ -7,31 +7,55 @@ import (
 	"github.com/gorilla/csrf"
 )
 
+// New ...
+func New() *CSRF {
+	return &CSRF{}
+}
+
 // CSRF Middelware
-type CSRF struct {
-	*kira.App
+type CSRF struct{}
+
+// Name of the middleware.
+func (c *CSRF) Name() string {
+	return "csrf"
 }
 
-// NewCSRF ...
-func NewCSRF(app *kira.App) *CSRF {
-	return &CSRF{app}
-}
+// Middleware ...
+func (c *CSRF) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
+	// Here we convert the next context handler to the normal http.Handler.
+	// We just wrap it so we can use it later with Gorilla CSRF middleware.
+	var handler http.Handler
+	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		next(ctx)
+	})
 
-// Handler ...
-func (c *CSRF) Handler(next http.Handler) http.Handler {
-	CSRF := csrf.Protect(
-		[]byte(c.Configs.GetString("app.key")),
-		csrf.FieldName(c.Configs.GetString("csrf.field_name", "_token")),
-		csrf.RequestHeader(c.Configs.GetString("csrf.header_name", "X-CSRF-Token")),
-		csrf.CookieName(c.Configs.GetString("csrf.cookie_name", "kira_csrf")),
-		csrf.Secure(c.Configs.GetBool("csrf.secure", true)),
-	)
+	// Set the token in the header.
+	handler = func(n http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			token := csrf.Token(r)
 
-	return CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Set CSRF into the header.
-		w.Header().Set(c.Configs.GetString("csrf.header_name", "X-CSRF-Token"), csrf.Token(r))
+			// Save the csrf token into the header.
+			w.Header().Set(
+				ctx.Config().GetString("csrf.header_name", "X-CSRF-Token"),
+				token,
+			)
 
-		// Go to the next request
-		next.ServeHTTP(w, r)
-	}))
+			// Save the csrf token into the context.
+			ctx.SetData("csrf_token", token)
+
+			// Move to the next request.
+			n.ServeHTTP(w, r)
+		})
+	}(handler)
+
+	// Run the csrf middleware.
+	handler = csrf.Protect(
+		[]byte(ctx.Config().GetString("app.key")),
+		csrf.FieldName(ctx.Config().GetString("csrf.field_name", "_token")),
+		csrf.RequestHeader(ctx.Config().GetString("csrf.header_name", "X-CSRF-Token")),
+		csrf.CookieName(ctx.Config().GetString("csrf.cookie_name", "kira_csrf")),
+		csrf.Secure(ctx.Config().GetBool("csrf.secure", true)),
+	)(handler)
+
+	handler.ServeHTTP(ctx.Response(), ctx.Request())
 }

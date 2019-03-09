@@ -12,13 +12,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-kira/kog"
-	"github.com/go-kira/kon"
-	"github.com/gorilla/mux"
+	"github.com/go-kira/config"
+	"github.com/go-kira/log"
+	"github.com/julienschmidt/httprouter"
 )
 
-var hero = `
-   __ __   _             
+var hero = `   __ __   _             
   / //_/  (_)  ____ ___ _
  / ,<    / /  / __// _  /
 /_/|_|  /_/  /_/   \_,_/ 
@@ -35,10 +34,13 @@ const (
 type App struct {
 	Routes      []*Route
 	Middlewares []Middleware
-	Router      *mux.Router
-	Log         *kog.Logger
-	Configs     *kon.Kon
+	Router      *httprouter.Router
+	Log         *log.Logger
+	Configs     *config.Config
 	Env         string
+
+	// Not found handler.
+	NotFoundHandler HandlerFunc
 }
 
 // New init the framework
@@ -56,7 +58,7 @@ func New() *App {
 	app.Log = setupLogger(app.Configs)
 
 	// define a Router
-	app.Router = mux.NewRouter().StrictSlash(true)
+	app.Router = httprouter.New()
 
 	// return App instance
 	return app
@@ -66,8 +68,7 @@ func New() *App {
 func (a *App) Run() *App {
 	fmt.Printf("%v", hero)
 
-	// parse routes & middlewares
-	a.NewRouter()
+	a.RegisterRoutes()
 
 	// validate if the server need tls connection.
 	if !a.Configs.GetBool("server.tls", false) {
@@ -82,6 +83,11 @@ func (a *App) Run() *App {
 	return a
 }
 
+// NotFound custom not found handler.
+func (a *App) NotFound(ctx HandlerFunc) {
+	a.NotFoundHandler = ctx
+}
+
 // getEnv for set the framework environment.
 func getEnv() string {
 	// Get the environment from .kira_env file.
@@ -89,7 +95,7 @@ func getEnv() string {
 		// path/to/whatever exists
 		kiraEnv, err := ioutil.ReadFile("./.kira_env")
 		if err != nil {
-			kog.Panic(err)
+			log.Panic(err)
 		}
 		return strings.TrimSpace(string(kiraEnv))
 	}
@@ -102,13 +108,13 @@ func getEnv() string {
 	return osEnv
 }
 
-func getConfig() *kon.Kon {
-	var files = []string{"./config.toml", "./config/application.toml"}
+func getConfig() *config.Config {
+	var files = []string{"./testdata/config.toml", "./config.toml", "./config/application.toml"}
 	var env = fmt.Sprintf("./config/environments/%s.toml", getEnv())
 
 	if _, err := os.Stat(env); !os.IsNotExist(err) {
 		files = append(files, env)
 	}
 
-	return kon.NewFromFile(files...)
+	return config.NewFromFile(files...)
 }

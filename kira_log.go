@@ -4,19 +4,22 @@ import (
 	"io"
 	"os"
 
-	"github.com/go-kira/kog"
-	"github.com/go-kira/kon"
+	"github.com/go-kira/config"
+	"github.com/go-kira/log"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 
-func setupLogger(config *kon.Kon) *kog.Logger {
-	logger := kog.New(setupWriter(config), setupFormatter())
-	logger.SetLevel(kog.LevelStrings[config.GetString("log.level", "info")])
+func setupLogger(config *config.Config) *log.Logger {
+	logger := log.New(
+		setupWriter(config),
+		setupFormatter(),
+	)
+	logger.SetLevel(log.LevelStrings[config.GetString("log.level", "info")])
 
 	return logger
 }
 
-func setupWriter(config *kon.Kon) io.Writer {
+func setupWriter(config *config.Config) io.Writer {
 	switch config.GetString("log.log") {
 	case "stderr":
 		return os.Stderr
@@ -25,32 +28,21 @@ func setupWriter(config *kon.Kon) io.Writer {
 	case "stdout":
 		return os.Stdout
 	case "file":
-		return logToFile(config)
+		return &lumberjack.Logger{
+			Filename:   config.GetString("log.file", "./storage/logs/kira.log"),
+			MaxSize:    config.GetInt("log.file_max_size", 100),
+			MaxBackups: config.GetInt("log.file_max_backups", 3),
+			MaxAge:     config.GetInt("log.file_max_age", 28),
+			Compress:   config.GetBool("log.file_max_compress", false),
+		}
 	}
 
 	return os.Stderr
 }
 
 // setupFormatter to setup the logger formatter.
-func setupFormatter() kog.Formatter {
+func setupFormatter() log.Formatter {
 	// TODO
 	// - Add color formatter
-	return kog.NewDefaultFormatter()
-}
-
-// LoggerToFile - make evrey log in log file
-// append log to this destination file: storage/logs/year/month/day/logs.log
-func logToFile(config *kon.Kon) io.Writer {
-	// TODO
-	// Rotate file log
-	// set a max size of log file
-	// when the file rish the limit, create new one.
-
-	return &lumberjack.Logger{
-		Filename:   config.GetString("log.file", "./storage/logs/kira.log"),
-		MaxSize:    config.GetInt("log.file_max_size", 100),
-		MaxBackups: config.GetInt("log.file_max_backups", 3),
-		MaxAge:     config.GetInt("log.file_max_age", 28),
-		Compress:   config.GetBool("file_max_compress", false),
-	}
+	return log.NewDefaultFormatter()
 }
