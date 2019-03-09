@@ -153,6 +153,11 @@ func (app *App) Patch(path string, ctx HandlerFunc, middlewares ...Middleware) *
 	return createRoute(app, "PATCH", path, ctx, middlewares...)
 }
 
+// Handle DELETE requests.
+func (app *App) Delete(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
+	return createRoute(app, "DELETE", path, ctx, middlewares...)
+}
+
 // Handle OPTIONS requests.
 func (app *App) Options(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "OPTIONS", path, ctx, middlewares...)

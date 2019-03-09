@@ -8,9 +8,6 @@ package kira
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-	"strings"
 
 	"github.com/go-kira/config"
 	"github.com/go-kira/log"
@@ -86,35 +83,4 @@ func (a *App) Run() *App {
 // NotFound custom not found handler.
 func (a *App) NotFound(ctx HandlerFunc) {
 	a.NotFoundHandler = ctx
-}
-
-// getEnv for set the framework environment.
-func getEnv() string {
-	// Get the environment from .kira_env file.
-	if _, err := os.Stat("./.kira_env"); !os.IsNotExist(err) {
-		// path/to/whatever exists
-		kiraEnv, err := ioutil.ReadFile("./.kira_env")
-		if err != nil {
-			log.Panic(err)
-		}
-		return strings.TrimSpace(string(kiraEnv))
-	}
-
-	// Get the environment from system variable
-	osEnv := os.Getenv("KIRA_ENV")
-	if osEnv == "" {
-		return "development"
-	}
-	return osEnv
-}
-
-func getConfig() *config.Config {
-	var files = []string{"./testdata/config.toml", "./config.toml", "./config/application.toml"}
-	var env = fmt.Sprintf("./config/environments/%s.toml", getEnv())
-
-	if _, err := os.Stat(env); !os.IsNotExist(err) {
-		files = append(files, env)
-	}
-
-	return config.NewFromFile(files...)
 }
