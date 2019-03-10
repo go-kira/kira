@@ -113,42 +113,42 @@ func createRoute(app *App, method string, path string, handler HandlerFunc, midd
 	return route
 }
 
-// Handle GET requests.
+// Get Handle GET requests.
 func (app *App) Get(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "GET", path, ctx, middlewares...)
 }
 
-// Handle HEAD requests.
+// Head Handle HEAD requests.
 func (app *App) Head(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "HEAD", path, ctx, middlewares...)
 }
 
-// Handle POST requests.
+// Post Handle POST requests.
 func (app *App) Post(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "POST", path, ctx, middlewares...)
 }
 
-// Handle PUT requests.
+// Put Handle PUT requests.
 func (app *App) Put(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "PUT", path, ctx, middlewares...)
 }
 
-// Handle PATCH requests.
+// Patch Handle PATCH requests.
 func (app *App) Patch(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "PATCH", path, ctx, middlewares...)
 }
 
-// Handle DELETE requests.
+// Delete Handle DELETE requests.
 func (app *App) Delete(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "DELETE", path, ctx, middlewares...)
 }
 
-// Handle OPTIONS requests.
+// Options Handle OPTIONS requests.
 func (app *App) Options(path string, ctx HandlerFunc, middlewares ...Middleware) *Route {
 	return createRoute(app, "OPTIONS", path, ctx, middlewares...)
 }
 
-// Handle ServeFiles requests.
+// ServeFiles serve files in the given root.
 func (app *App) ServeFiles(path string, root http.FileSystem) {
 	app.Router.ServeFiles(path, root)
 }

@@ -11,7 +11,7 @@ func (c *Context) View(temps string, data ...interface{}) error {
 	// Set content type
 	c.Response().Header().Set("Content-Type", "text/html")
 
-	// parse the tempaltes
+	// parse the templates
 	template, templateData, err := parseView(c, temps, data)
 	if err != nil {
 		return err
@@ -26,6 +26,7 @@ func (c *Context) View(temps string, data ...interface{}) error {
 	return nil
 }
 
+// ViewToString parse a template and return the parsed template as a string.
 func (c *Context) ViewToString(temps string, data ...interface{}) (string, error) {
 	template, templateData, err := parseView(c, temps, data)
 	if err != nil {
@@ -41,7 +42,7 @@ func (c *Context) ViewToString(temps string, data ...interface{}) (string, error
 	return buf.String(), nil
 }
 
-// Validate if the view exists.
+// ViewExists Validate if the view exists.
 func (c *Context) ViewExists(tmp string) bool {
 	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
 	viewPath := c.Config().GetString("views.path", "app/views/")

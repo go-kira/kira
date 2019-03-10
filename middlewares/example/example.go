@@ -12,11 +12,7 @@ func New() *Example {
 	return &Example{}
 }
 
-func (e *Example) Name() string {
-	return "example"
-}
-
-// Middleware ...
+// Middleware handler.
 func (e *Example) Middleware(c *kira.Context, next kira.HandlerFunc) {
 	// Next handlerr
 	c.String("before \n")

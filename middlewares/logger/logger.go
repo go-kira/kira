@@ -18,7 +18,7 @@ func New() *Log {
 	return &Log{}
 }
 
-// Handler - middleware handler
+// Middleware handler.
 func (l *Log) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	// Start time
 	var now = time.Now()

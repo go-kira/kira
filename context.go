@@ -18,7 +18,7 @@ type Context struct {
 	response http.ResponseWriter
 	Logger   *log.Logger
 	Configs  *config.Config
-	// The data assocaited with the request.
+	// The data associated with the request.
 	data map[string]interface{}
 }
 
@@ -53,7 +53,7 @@ func (c *Context) Response() http.ResponseWriter {
 	return c.response
 }
 
-// Header Write HTTP header to the response.
+// HeaderStatus Write HTTP header to the response and also write the status message to the body.
 func (c *Context) HeaderStatus(code int) {
 	c.Response().WriteHeader(code)
 }

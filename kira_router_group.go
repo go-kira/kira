@@ -32,32 +32,32 @@ func (g Group) Get(path string, handler HandlerFunc, middlewares ...Middleware) 
 	g.app.Get(g.path(path), handler, middlewares...)
 }
 
-// Get is a shortcut for app.Head with the group prefix.
+// Head is a shortcut for app.Head with the group prefix.
 func (g Group) Head(path string, handler HandlerFunc, middlewares ...Middleware) {
 	g.app.Head(g.path(path), handler, middlewares...)
 }
 
-// Get is a shortcut for app.Post with the group prefix.
+// Post is a shortcut for app.Post with the group prefix.
 func (g Group) Post(path string, handler HandlerFunc, middlewares ...Middleware) {
 	g.app.Post(g.path(path), handler, middlewares...)
 }
 
-// Get is a shortcut for app.Put with the group prefix.
+// Put is a shortcut for app.Put with the group prefix.
 func (g Group) Put(path string, handler HandlerFunc, middlewares ...Middleware) {
 	g.app.Put(g.path(path), handler, middlewares...)
 }
 
-// Get is a shortcut for app.Patch with the group prefix.
+// Patch is a shortcut for app.Patch with the group prefix.
 func (g Group) Patch(path string, handler HandlerFunc, middlewares ...Middleware) {
 	g.app.Patch(g.path(path), handler, middlewares...)
 }
 
-// Get is a shortcut for app.Delete with the group prefix.
+// Delete is a shortcut for app.Delete with the group prefix.
 func (g Group) Delete(path string, handler HandlerFunc, middlewares ...Middleware) {
 	g.app.Delete(g.path(path), handler, middlewares...)
 }
 
-// Get is a shortcut for app.ServeFiles with the group prefix.
+// ServeFiles is a shortcut for app.ServeFiles with the group prefix.
 func (g Group) ServeFiles(path string, root http.FileSystem) {
 	g.app.ServeFiles(g.path(path), root)
 }

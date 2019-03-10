@@ -17,13 +17,14 @@ func New() *JWT {
 	return &JWT{}
 }
 
+// CreateToken generate JWT token.
 func CreateToken(ctx *kira.Context, claims jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(ctx.Config().GetString("app.key")))
 }
 
-// Handler - middelware handler
+// Middleware handler
 func (j *JWT) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	// The token string that will be validated.
 	var tokenString string

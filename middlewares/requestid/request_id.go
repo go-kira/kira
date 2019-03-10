@@ -15,9 +15,10 @@ func New() *RequestID {
 	return &RequestID{}
 }
 
-// Handler - middleware handler
+// Middleware handler.
 func (rq *RequestID) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	headerName := ctx.Config().GetString("server.request_id", "X-Request-Id")
+
 	// Request ID
 	requestid := rq.random()
 

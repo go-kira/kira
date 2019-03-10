@@ -46,7 +46,7 @@ func Between(value string, a string, b string) string {
 	return value[posFirstAdjusted:posLast]
 }
 
-// RandomString return random string by lenght
+// RandomString return random string by length
 func RandomString(length int) string {
 	const letters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	bytes := RandomBytes(length)

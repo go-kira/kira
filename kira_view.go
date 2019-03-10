@@ -1,7 +1,6 @@
 package kira
 
 import (
-	"errors"
 	"fmt"
 	"html/template"
 	"path/filepath"
@@ -26,7 +25,7 @@ func parseView(c *Context, temps string, data ...interface{}) (*template.Templat
 	for _, temp := range templates {
 		tmplPath := viewPath + temp + fileSuffix
 		if !c.ViewExists(temp) {
-			return nil, nil, errors.New(fmt.Sprintf("kira: template %s not exits.", tmplPath))
+			return nil, nil, fmt.Errorf("kira: template %s not exits", tmplPath)
 		}
 
 		templatesFiles = append(templatesFiles, tmplPath)

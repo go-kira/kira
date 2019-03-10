@@ -98,12 +98,13 @@ func defaultNotFound(ctx *Context) {
 			Message string `json:"message"`
 		}{http.StatusNotFound, "404 Not Found"})
 		return
-	} else { // HTML
-		// Validate if the template exists
-		if ctx.ViewExists("errors/404") {
-			ctx.View("errors/404")
-		} else {
-			ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
-		}
+	}
+
+	// HTML
+	// Validate if the template exists
+	if ctx.ViewExists("errors/404") {
+		ctx.View("errors/404")
+	} else {
+		ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
 	}
 }

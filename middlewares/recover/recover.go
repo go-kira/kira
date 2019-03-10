@@ -17,7 +17,7 @@ func New() *Recover {
 	return &Recover{}
 }
 
-// Handler - middelware handler
+// Middleware handler.
 func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	defer func() {
 		r := recover()

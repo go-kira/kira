@@ -15,12 +15,7 @@ func New() *CSRF {
 // CSRF Middelware
 type CSRF struct{}
 
-// Name of the middleware.
-func (c *CSRF) Name() string {
-	return "csrf"
-}
-
-// Middleware ...
+// Middleware handler.
 func (c *CSRF) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	// Here we convert the next context handler to the normal http.Handler.
 	// We just wrap it so we can use it later with Gorilla CSRF middleware.

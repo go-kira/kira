@@ -17,7 +17,7 @@ func New() *Limitbody {
 	return &Limitbody{}
 }
 
-// Handler - middelware handler
+// Middleware handler.
 func (l *Limitbody) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	if ctx.Request().ContentLength > ctx.Config().GetInt64("server.body_limit", 32)*MB {
 		http.Error(ctx.Response(), "Request too large", http.StatusExpectationFailed)
