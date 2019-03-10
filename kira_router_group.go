@@ -30,9 +30,15 @@ func (g Group) path(path string) string {
 	return httprouter.CleanPath(g.prefix + httprouter.CleanPath(path))
 }
 
+func (g Group) clean(path string) string {
+	return httprouter.CleanPath(path)
+}
+
 // Group adds ap refix to another grouped routes.
 func (g Group) Group(prefix string, group GroupFunc) {
-	group(g)
+	g.app.Group(g.clean(g.prefix)+g.clean(prefix), func(g Group) {
+		group(g)
+	})
 }
 
 // Get is a shortcut for app.Get with the group prefix.
