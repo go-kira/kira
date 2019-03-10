@@ -20,6 +20,8 @@ type Context struct {
 	Configs  *config.Config
 	// The data associated with the request.
 	data map[string]interface{}
+	// environment
+	env string
 }
 
 // NewContext - Create new instance of Context
@@ -30,6 +32,7 @@ func NewContext(res http.ResponseWriter, req *http.Request, app *App) *Context {
 		Logger:   app.Log,
 		Configs:  app.Configs,
 		data:     make(map[string]interface{}),
+		env:      app.Env,
 	}
 }
 
@@ -75,7 +78,7 @@ func (c *Context) Config() *config.Config {
 
 // Env gets the application environment.
 func (c *Context) Env() string {
-	return c.Env
+	return c.env
 }
 
 // Status send a specific status with the HTTP reply.
