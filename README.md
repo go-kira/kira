@@ -15,11 +15,14 @@
 
 ---
 
-**Kira** web framework. Is simply a minimal web framework try to focus in simplicity.
+<p align="center">
+  <p align="center">**Kira** web framework. Simply a minimal web framework.</p>
+</p>
 
 ## Features
 
-TODO
+- **Simplicity** kira is simple. You will find yourself familiar with it quickly.
+- **Fast** simplicity comes with speed. Kira is super fast.
 
 ## Installation
 

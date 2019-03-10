@@ -57,6 +57,11 @@ func (g Group) Delete(path string, handler HandlerFunc, middlewares ...Middlewar
 	g.app.Delete(g.path(path), handler, middlewares...)
 }
 
+// Options is a shortcut for app.Delete with the group prefix.
+func (g Group) Options(path string, handler HandlerFunc, middlewares ...Middleware) {
+	g.app.Options(g.path(path), handler, middlewares...)
+}
+
 // ServeFiles is a shortcut for app.ServeFiles with the group prefix.
 func (g Group) ServeFiles(path string, root http.FileSystem) {
 	g.app.ServeFiles(g.path(path), root)
