@@ -16,7 +16,7 @@
 ---
 
 <p align="center">
-  <p align="center">**Kira** web framework. Simply a minimal web framework.</p>
+  <p align="center"><b>Kira</b> web framework. Simply a minimal web framework.</p>
 </p>
 
 ## Features
