@@ -6,6 +6,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// GroupFunc represent Group function.
+type GroupFunc func(Group)
+
 // Group represent routes group.
 type Group struct {
 	app    *App
@@ -13,7 +16,7 @@ type Group struct {
 }
 
 // Group adds a prefix to the given routes.
-func (app *App) Group(prefix string, group func(Group)) {
+func (app *App) Group(prefix string, group GroupFunc) {
 	g := Group{
 		app:    app,
 		prefix: prefix,
@@ -25,6 +28,11 @@ func (app *App) Group(prefix string, group func(Group)) {
 
 func (g Group) path(path string) string {
 	return httprouter.CleanPath(g.prefix + httprouter.CleanPath(path))
+}
+
+// Group adds ap refix to another grouped routes.
+func (g Group) Group(prefix string, group GroupFunc) {
+	group(g)
 }
 
 // Get is a shortcut for app.Get with the group prefix.
