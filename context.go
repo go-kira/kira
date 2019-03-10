@@ -73,6 +73,11 @@ func (c *Context) Config() *config.Config {
 	return c.Configs
 }
 
+// Env gets the application environment.
+func (c *Context) Env() string {
+	return c.Env
+}
+
 // Status send a specific status with the HTTP reply.
 func (c *Context) Status(code int) {
 	c.Response().WriteHeader(code)
