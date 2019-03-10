@@ -17,9 +17,5 @@ func Serialize(src interface{}) ([]byte, error) {
 
 // Deserialize decodes a value using gob.
 func Deserialize(src []byte, dst interface{}) error {
-	dec := gob.NewDecoder(bytes.NewBuffer(src))
-	if err := dec.Decode(dst); err != nil {
-		return err
-	}
-	return nil
+	return gob.NewDecoder(bytes.NewBuffer(src)).Decode(dst)
 }
