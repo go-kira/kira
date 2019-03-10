@@ -28,6 +28,9 @@ func TestRouterGroup(t *testing.T) {
 		g.Patch("/patch", func(c *kira.Context) {
 			c.String("patch")
 		})
+		g.Delete("/delete", func(c *kira.Context) {
+			c.String("delete")
+		})
 		g.Options("/options", func(c *kira.Context) {
 			// The body should be empty
 		})
@@ -102,6 +105,21 @@ func TestRouterGroup(t *testing.T) {
 	}
 	if content != "patch" {
 		t.Errorf("expect: `patch`, have: %s", content)
+	}
+
+	// === Delete ===
+	reqDelete, _ := http.NewRequest(http.MethodDelete, url(s, "/prefix/delete"), nil)
+	reqDelete.Header.Set("Content-Type", "application/json; charset=utf-8")
+	resDelete, _ := http.DefaultClient.Do(reqDelete)
+	defer resDelete.Body.Close()
+	content = contentS(resDelete.Body)
+
+	// Assert
+	if resDelete.StatusCode != http.StatusOK {
+		t.Errorf("expect stauts: `202`, have: %d", resDelete.StatusCode)
+	}
+	if content != "delete" {
+		t.Errorf("expect: `delete`, have: %s", content)
 	}
 
 	// === Options ===
