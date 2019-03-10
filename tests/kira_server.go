@@ -44,3 +44,7 @@ func contentS(r io.Reader) string {
 
 	return fmt.Sprintf("%s", content)
 }
+
+func content(r io.Reader) ([]byte, error) {
+	return ioutil.ReadAll(r)
+}
