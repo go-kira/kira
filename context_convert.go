@@ -23,80 +23,73 @@ func (c *Context) ToString(f interface{}) string {
 }
 
 // ToInt convert type f to int.
-func (c *Context) ToInt(f interface{}) int {
+func (c *Context) ToInt(f interface{}) (int, error) {
 	switch f.(type) {
 	case int:
-		return f.(int)
+		return f.(int), nil
 	case string:
-		in, err := strconv.Atoi(f.(string))
-		if err != nil {
-			c.Error(err)
-		}
-		return in
+		return strconv.Atoi(f.(string))
 	case bool:
 		if f.(bool) {
-			return 1
+			return 1, nil
 		}
-		return 0
+		return 0, nil
 	case int64:
-		return int(f.(int64))
+		return int(f.(int64)), nil
 	case float64:
-		return int(f.(float64))
+		return int(f.(float64)), nil
 	case nil:
 	default:
-		return 0
+		return 0, nil
 	}
-	return 0
+	return 0, nil
 }
 
 // ToInt64 convert type f to int64.
-func (c *Context) ToInt64(f interface{}) int64 {
-	return int64(c.ToInt(f))
+func (c *Context) ToInt64(f interface{}) (int64, error) {
+	in, err := c.ToInt(f)
+	if err != nil {
+		return 0, err
+	}
+
+	return int64(in), nil
 }
 
 // ToBool convert type f to bool.
-func (c *Context) ToBool(f interface{}) bool {
+func (c *Context) ToBool(f interface{}) (bool, error) {
 	switch f.(type) {
 	case bool:
-		return f.(bool)
+		return f.(bool), nil
 	case int:
 		if f.(int) != 0 {
-			return true
+			return true, nil
 		}
-		return false
+		return false, nil
 	case int64:
 		if f.(int64) != 0 {
-			return true
+			return true, nil
 		}
-		return false
+		return false, nil
 	case float64:
 		if f.(float64) != 0 {
-			return true
+			return true, nil
 		}
-		return false
+		return false, nil
 	case string:
-		bol, err := strconv.ParseBool(f.(string))
-		if err != nil {
-			c.Error(err)
-		}
-		return bol
+		return strconv.ParseBool(f.(string))
 	}
-	return false
+	return false, nil
 }
 
 // ToFloat convert type f to float64.
-func (c *Context) ToFloat(f interface{}) float64 {
+func (c *Context) ToFloat(f interface{}) (float64, error) {
 	switch f.(type) {
 	case int:
-		return float64(f.(int))
+		return float64(f.(int)), nil
 	case int64:
-		return float64(f.(int64))
+		return float64(f.(int64)), nil
 	case string:
-		bol, err := strconv.ParseFloat(f.(string), 64)
-		if err != nil {
-			c.Error(err)
-		}
-		return bol
+		return strconv.ParseFloat(f.(string), 64)
 	}
-	return 0
+	return 0, nil
 }
