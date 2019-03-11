@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/go-kira/kira"
-	"github.com/go-kira/log"
 )
 
 // Log - log middleware
@@ -30,10 +29,10 @@ func (l *Log) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 
 	next(ctx)
 
-	logFormat := ctx.Config().GetString("log.format", ":status :method :time :duration :request_id :path")
+	logFormat := ctx.Config().GetString("log.format", ":status :method :duration :request_id :path")
 
 	r := strings.NewReplacer(
-		":time", log.FormatTime(time.Now()),
+		// ":time", log.FormatTime(time.Now()),
 		":status", strconv.Itoa(statusRecorder.statusCode),
 		":method", ctx.Request().Method,
 		":path", ctx.Request().RequestURI,
