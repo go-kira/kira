@@ -3,10 +3,8 @@ package recover
 import (
 	"net/http"
 	"runtime"
-	"time"
 
 	"github.com/go-kira/kira"
-	"github.com/go-kira/log"
 )
 
 // Recover - Middleware
@@ -28,7 +26,7 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 			requestID := ctx.Request().Context().Value(headerName)
 
 			// log the error
-			ctx.Log().Errorf("%s [%s] %s", log.FormatTime(time.Now()), r, requestID)
+			ctx.Log().Errorf("%s %s", r, requestID)
 
 			// write header
 			ctx.HeaderStatus(http.StatusInternalServerError)
