@@ -27,7 +27,7 @@ func TestCustomNotFound(t *testing.T) {
 	app := kira.New()
 
 	app.NotFound(func(c *kira.Context) {
-		c.HeaderStatus(http.StatusNotFound)
+		c.WriteStatus(http.StatusNotFound)
 		c.String("custom 404")
 	})
 

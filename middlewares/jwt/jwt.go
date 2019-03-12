@@ -37,13 +37,13 @@ func (j *JWT) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	if lookup[0] == "header" { // From header
 		tokenString, err = j.fromHeader(ctx, lookup[1])
 		if err != nil {
-			ctx.Status(http.StatusUnauthorized)
+			ctx.WriteStatus(http.StatusUnauthorized)
 			return
 		}
 	} else if lookup[0] == "cookie" { // From cookie
 		tokenString, err = j.fromCookie(ctx, lookup[1])
 		if err != nil {
-			ctx.Status(http.StatusUnauthorized)
+			ctx.WriteStatus(http.StatusUnauthorized)
 			return
 		}
 	}
@@ -52,7 +52,7 @@ func (j *JWT) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	if j.validateToken(ctx, tokenString) {
 		next(ctx)
 	} else {
-		ctx.Status(http.StatusUnauthorized)
+		ctx.WriteStatus(http.StatusUnauthorized)
 		return
 	}
 }

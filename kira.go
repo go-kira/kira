@@ -88,7 +88,7 @@ func (a *App) NotFound(ctx HandlerFunc) {
 
 // default not found handler.
 func defaultNotFound(ctx *Context) {
-	ctx.HeaderStatus(http.StatusNotFound)
+	ctx.WriteStatus(http.StatusNotFound)
 
 	// JSON
 	if ctx.WantsJSON() {
