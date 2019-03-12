@@ -24,8 +24,8 @@ func (c *Context) WantsJSON() bool {
 	return false
 }
 
-// ParseJSON - convert json from request body to interface.
-func (c *Context) ParseJSON(dst interface{}) {
+// DecodeJSON - convert json from request body to interface.
+func (c *Context) DecodeJSON(dst interface{}) {
 	// Checks if the dst is a pointer.
 	if reflect.ValueOf(dst).Kind() == reflect.Ptr {
 		err := json.NewDecoder(c.Request().Body).Decode(dst)
