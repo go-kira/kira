@@ -13,9 +13,7 @@ import (
 // Context pool
 var contextPool = &sync.Pool{
 	New: func() interface{} {
-		return &Context{
-			data: make(map[string]interface{}),
-		}
+		return &Context{}
 	},
 }
 
@@ -35,16 +33,17 @@ type Context struct {
 }
 
 // NewContext - Create new instance of Context
-func NewContext(w http.ResponseWriter, r *http.Request, app *App) *Context {
-	ctx := contextPool.Get().(*Context)
-	ctx.response = w
-	ctx.request = r
-	ctx.Logger = app.Log
-	ctx.Configs = app.Configs
-	ctx.env = app.Env
-
-	return ctx
-}
+// func NewContext(w http.ResponseWriter, r *http.Request, app *App) *Context {
+// 	ctx := contextPool.Get().(*Context)
+// 	ctx.response = w
+// 	ctx.request = r
+// 	ctx.Logger = app.Log
+// 	ctx.Configs = app.Configs
+// 	ctx.data = make(map[string]interface{})
+// 	ctx.env = app.Env
+//
+// 	return ctx
+// }
 
 // SetRequest change the current request with the given one.
 func (c *Context) SetRequest(r *http.Request) {

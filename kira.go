@@ -9,6 +9,7 @@ package kira
 import (
 	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/go-kira/config"
 	"github.com/go-kira/log"
@@ -39,6 +40,8 @@ type App struct {
 
 	// Not found handler.
 	NotFoundHandler HandlerFunc
+
+	pool *sync.Pool
 }
 
 // New init the framework
@@ -57,6 +60,17 @@ func New() *App {
 
 	// define a Router
 	app.Router = httprouter.New()
+
+	app.pool = &sync.Pool{
+		New: func() interface{} {
+			return &Context{
+				Logger:  app.Log,
+				Configs: app.Configs,
+				data:    make(map[string]interface{}),
+				env:     app.Env,
+			}
+		},
+	}
 
 	// return App instance
 	return app
