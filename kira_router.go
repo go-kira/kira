@@ -89,7 +89,13 @@ func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc
 		// TODO
 		//  - Set default values in the context.
 		//  - Like request id, csrf...
-		ctx := NewContext(w, r, app)
+		// ctx := NewContext(w, r, app)
+		ctx := contextPool.Get().(*Context)
+		ctx.response = w
+		ctx.request = r
+		ctx.Logger = app.Log
+		ctx.Configs = app.Configs
+		ctx.env = app.Env
 
 		// Run the chain
 		handler(ctx)

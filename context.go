@@ -13,7 +13,9 @@ import (
 // Context pool
 var contextPool = &sync.Pool{
 	New: func() interface{} {
-		return &Context{}
+		return &Context{
+			data: make(map[string]interface{}),
+		}
 	},
 }
 
@@ -39,7 +41,6 @@ func NewContext(w http.ResponseWriter, r *http.Request, app *App) *Context {
 	ctx.request = r
 	ctx.Logger = app.Log
 	ctx.Configs = app.Configs
-	ctx.data = make(map[string]interface{})
 	ctx.env = app.Env
 
 	return ctx
