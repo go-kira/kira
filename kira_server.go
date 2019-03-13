@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"syscall"
 )
 
 // StartServer - Start kira server
@@ -64,7 +65,7 @@ func (a *App) StartTLSServer() {
 // GracefullyShutdown the server
 func (a *App) GracefullyShutdown(server *http.Server) {
 	sigquit := make(chan os.Signal, 1)
-	signal.Notify(sigquit, os.Interrupt, os.Kill)
+	signal.Notify(sigquit, os.Interrupt, syscall.SIGTERM)
 
 	sig := <-sigquit
 	a.Log.Infof("Signal to shutdown the server: %+v", sig)

@@ -17,11 +17,7 @@ func (c *Context) JSON(data interface{}) {
 
 // WantsJSON - validate if the request wants a json response.
 func (c *Context) WantsJSON() bool {
-	if c.Request().Header.Get("Accept") == "application/json" {
-		return true
-	}
-
-	return false
+	return c.Request().Header.Get("Accept") == "application/json"
 }
 
 // DecodeJSON - convert json from request body to interface.

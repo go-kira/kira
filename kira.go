@@ -103,7 +103,10 @@ func defaultNotFound(ctx *Context) {
 	// HTML
 	// Validate if the template exists
 	if ctx.ViewExists("errors/404") {
-		ctx.View("errors/404")
+		err := ctx.View("errors/404")
+		if err != nil {
+			ctx.Error(err)
+		}
 	} else {
 		ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
 	}

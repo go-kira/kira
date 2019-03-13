@@ -16,11 +16,8 @@ func (c *Context) HasQuery(key string) bool {
 		return false
 	}
 	vs := v[key]
-	if len(vs) == 0 {
-		return false
-	}
 
-	return true
+	return len(vs) == 0
 }
 
 // Param is an alias of var method.
@@ -28,4 +25,9 @@ func (c *Context) Param(param string) string {
 	params := httprouter.ParamsFromContext(c.Request().Context())
 
 	return params.ByName(param)
+}
+
+// ParseMultipartForm pars
+func (c *Context) ParseMultipartForm() error {
+	return c.Request().ParseMultipartForm(c.Config().GetInt64("server.body_limit", 32) * MB)
 }

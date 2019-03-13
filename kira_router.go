@@ -16,9 +16,7 @@ type Route struct {
 
 // Middleware add a middleware to the route.
 func (r *Route) Middleware(midd ...Middleware) {
-	for _, middleware := range midd {
-		r.Middlewares = append(r.Middlewares, middleware)
-	}
+	r.Middlewares = append(r.Middlewares, midd...)
 }
 
 // Use is an alias of Middleware method.

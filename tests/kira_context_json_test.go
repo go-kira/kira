@@ -46,7 +46,7 @@ func TestContextJSONParse(t *testing.T) {
 				Message string `json:"message"`
 			}{}
 
-			c.ParseJSON(&st)
+			c.DecodeJSON(&st)
 
 			if st.Message != "json" {
 				t.Errorf(`expect: "{"message":"json"}", have: %+v`, st)

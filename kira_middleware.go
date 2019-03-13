@@ -8,9 +8,7 @@ type Middleware interface {
 
 // Middleware - add the middleware
 func (app *App) Middleware(middlewares ...Middleware) {
-	for _, m := range middlewares {
-		app.Middlewares = append(app.Middlewares, m)
-	}
+	app.Middlewares = append(app.Middlewares, middlewares...)
 }
 
 // Use is an alias of Middleware method.

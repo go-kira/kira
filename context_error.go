@@ -4,6 +4,7 @@ import "bytes"
 
 var errSeparator = ":\n\t"
 
+// Error represent kira error type.
 type Error struct {
 	Path string
 	Op   string
