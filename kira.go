@@ -1,7 +1,6 @@
 package kira
 
 // TODO:
-//  - Remove "csrf", "session" from the base code.
 //  - Implement "plugin" mechanism.
 //  - We can use "plugin" to provide additional functionalities to the user like: Auth, Cache, Database ORM...
 //  - Error wrapper: Error{op: "op.name", err: Error}...
@@ -38,29 +37,22 @@ type App struct {
 	Configs     *config.Config
 	Env         string
 
-	// Not found handler.
+	// Not found handler
 	NotFoundHandler HandlerFunc
 
+	// Context pool
 	pool *sync.Pool
 }
 
 // New init the framework
 func New() *App {
-	// initialization...
 	app := &App{}
-
-	// kira environment
 	app.Env = getEnv()
-
-	// configs
 	app.Configs = getConfig()
-
-	// logger
 	app.Log = setupLogger(app.Configs)
-
-	// define a Router
 	app.Router = httprouter.New()
 
+	// Context pool
 	app.pool = &sync.Pool{
 		New: func() interface{} {
 			return &Context{
@@ -77,21 +69,25 @@ func New() *App {
 }
 
 // Run the framework
-func (a *App) Run() *App {
+func (a *App) Run(addr ...string) *App {
 	fmt.Printf("%v", hero)
 
+	// Register the application routes
 	a.RegisterRoutes()
+
+	// TCP address
+	serverAddr := serverAddr(a.Configs, addr...)
 
 	// validate if the server need tls connection.
 	if !a.Configs.GetBool("server.tls", false) {
 		// Start the server
-		a.StartServer()
+		a.StartServer(serverAddr)
 	} else {
 		// TLS
-		a.StartTLSServer()
+		a.StartTLSServer(serverAddr)
 	}
 
-	// return App instance
+	// App instance
 	return a
 }
 
