@@ -102,7 +102,7 @@ func (a *App) NotFound(ctx HandlerFunc) {
 
 // default not found handler.
 func defaultNotFound(ctx *Context) {
-	ctx.WriteStatus(http.StatusNotFound)
+	ctx.Status(http.StatusNotFound)
 
 	// JSON
 	if ctx.WantsJSON() {
