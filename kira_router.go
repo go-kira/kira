@@ -89,10 +89,13 @@ func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc
 		// TODO
 		//  - Set default values in the context.
 		//  - Like request id, csrf...
-		c := NewContext(w, r, app)
+		ctx := NewContext(w, r, app)
 
 		// Run the chain
-		handler(c)
+		handler(ctx)
+
+		// Release the pool
+		contextPool.Put(ctx)
 	}
 }
 

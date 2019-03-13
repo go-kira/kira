@@ -3,11 +3,19 @@ package kira
 import (
 	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/go-kira/log"
 
 	"github.com/go-kira/config"
 )
+
+// Context pool
+var contextPool = &sync.Pool{
+	New: func() interface{} {
+		return &Context{}
+	},
+}
 
 // HandlerFunc - Type to define context function
 type HandlerFunc func(*Context)
@@ -25,15 +33,16 @@ type Context struct {
 }
 
 // NewContext - Create new instance of Context
-func NewContext(res http.ResponseWriter, req *http.Request, app *App) *Context {
-	return &Context{
-		request:  req,
-		response: res,
-		Logger:   app.Log,
-		Configs:  app.Configs,
-		data:     make(map[string]interface{}),
-		env:      app.Env,
-	}
+func NewContext(w http.ResponseWriter, r *http.Request, app *App) *Context {
+	ctx := contextPool.Get().(*Context)
+	ctx.response = w
+	ctx.request = r
+	ctx.Logger = app.Log
+	ctx.Configs = app.Configs
+	ctx.data = make(map[string]interface{})
+	ctx.env = app.Env
+
+	return ctx
 }
 
 // SetRequest change the current request with the given one.
