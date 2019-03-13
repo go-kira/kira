@@ -30,10 +30,7 @@ func (c *CSRF) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 			token := csrf.Token(r)
 
 			// Save the csrf token into the header.
-			w.Header().Set(
-				ctx.Config().GetString("csrf.header_name", "X-CSRF-Token"),
-				token,
-			)
+			w.Header().Set(ctx.Config().GetString("csrf.header_name", "X-CSRF-Token"), token)
 
 			// Save the csrf token into the context.
 			ctx.SetData("csrf_token", token)

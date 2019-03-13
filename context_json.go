@@ -2,7 +2,6 @@ package kira
 
 import (
 	"encoding/json"
-	"reflect"
 )
 
 // JSON - Send response as json.
@@ -21,12 +20,6 @@ func (c *Context) WantsJSON() bool {
 }
 
 // DecodeJSON - convert json from request body to interface.
-func (c *Context) DecodeJSON(dst interface{}) {
-	// Checks if the dst is a pointer.
-	if reflect.ValueOf(dst).Kind() == reflect.Ptr {
-		err := json.NewDecoder(c.Request().Body).Decode(dst)
-		if err != nil {
-			c.Error(err)
-		}
-	}
+func (c *Context) DecodeJSON(dst interface{}) error {
+	return json.NewDecoder(c.Request().Body).Decode(dst)
 }
