@@ -51,6 +51,9 @@ func parseView(c *Context, temps string, data ...interface{}) (*template.Templat
 // default views functions.
 func viewFuncs(ctx *Context) template.FuncMap {
 	return template.FuncMap{
+		"env": func() string {
+			return ctx.Env()
+		},
 		"config": func(key string) interface{} {
 			return ctx.Config().Get(key)
 		},
