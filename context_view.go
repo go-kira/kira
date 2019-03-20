@@ -12,13 +12,14 @@ func (c *Context) View(temps string, data ...interface{}) error {
 	c.Response().Header().Set("Content-Type", "text/html")
 
 	// parse the templates
-	template, templateData, err := parseView(c, temps, data)
+	template, err := parseView(c, temps, data)
 	if err != nil {
 		return err
 	}
 
 	// execute the templates
-	err = template.Execute(c.Response(), templateData)
+
+	err = template.Execute(c.Response(), parseViewData(data...))
 	if err != nil {
 		return err
 	}
@@ -28,13 +29,13 @@ func (c *Context) View(temps string, data ...interface{}) error {
 
 // ViewToString parse a template and return the parsed template as a string.
 func (c *Context) ViewToString(temps string, data ...interface{}) (string, error) {
-	template, templateData, err := parseView(c, temps, data)
+	template, err := parseView(c, temps, data)
 	if err != nil {
 		return "", err
 	}
 
 	buf := &bytes.Buffer{}
-	err = template.Execute(buf, templateData)
+	err = template.Execute(buf, parseViewData(data...))
 	if err != nil {
 		return "", err
 	}

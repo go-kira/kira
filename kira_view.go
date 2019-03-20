@@ -12,7 +12,7 @@ import (
 type ViewData map[string]interface{}
 
 // parse the view and return the view template and the view data.
-func parseView(c *Context, temps string, data ...interface{}) (*template.Template, interface{}, error) {
+func parseView(c *Context, temps string, data ...interface{}) (*template.Template, error) {
 	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
 	viewPath := c.Config().GetString("views.path", "./app/views/")
 
@@ -26,7 +26,7 @@ func parseView(c *Context, temps string, data ...interface{}) (*template.Templat
 	for _, temp := range templates {
 		tmplPath := viewPath + temp + fileSuffix
 		if !c.ViewExists(temp) {
-			return nil, nil, fmt.Errorf("kira: template %s not exits", tmplPath)
+			return nil, fmt.Errorf("kira: template %s not exits", tmplPath)
 		}
 
 		templatesFiles = append(templatesFiles, tmplPath)
@@ -35,18 +35,17 @@ func parseView(c *Context, temps string, data ...interface{}) (*template.Templat
 	// parse templates
 	template, err := template.New(baseTemplate).Funcs(viewFuncs(c)).ParseFiles(templatesFiles...)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	// use only the first index as the view data, if exists.
-	var templateData interface{}
+	return template, nil
+}
+
+func parseViewData(data ...interface{}) interface{} {
 	if len(data) > 0 {
-		templateData = data[0]
-	} else {
-		templateData = nil
+		return data[0]
 	}
-
-	return template, templateData, nil
+	return nil
 }
 
 // default views functions.
