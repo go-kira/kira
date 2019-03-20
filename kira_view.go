@@ -1,6 +1,7 @@
 package kira
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"path/filepath"
@@ -66,6 +67,10 @@ func viewFuncs(ctx *Context) template.FuncMap {
 		},
 		"include": func(filename string) (string, error) {
 			return ctx.ViewToString(filename)
+		},
+		"json": func(v interface{}) template.JS {
+			js, _ := json.Marshal(v)
+			return template.JS(js)
 		},
 	}
 }
