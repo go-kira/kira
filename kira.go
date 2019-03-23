@@ -8,6 +8,7 @@ package kira
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/go-kira/config"
@@ -56,8 +57,8 @@ func New() *App {
 	app.pool = &sync.Pool{
 		New: func() interface{} {
 			return &Context{
-				Logger:  app.Log,
-				Configs: app.Configs,
+				logger:  app.Log,
+				configs: app.Configs,
 				data:    make(map[string]interface{}),
 				env:     app.Env,
 			}
@@ -85,6 +86,13 @@ func (a *App) Run(addr ...string) *App {
 	} else {
 		// TLS
 		a.StartTLSServer(serverAddr)
+	}
+
+	// Timezone
+	tz := a.Configs.GetString("app.timezone")
+	if tz != "" {
+		// Now the framework will parse all the times in the given Timezone.
+		os.Setenv("TZ", tz)
 	}
 
 	// App instance

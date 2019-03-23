@@ -24,8 +24,8 @@ type HandlerFunc func(*Context)
 type Context struct {
 	request  *http.Request
 	response http.ResponseWriter
-	Logger   *log.Logger
-	Configs  *config.Config
+	logger   *log.Logger
+	configs  *config.Config
 	// The data associated with the request.
 	data map[string]interface{}
 	// environment
@@ -79,12 +79,12 @@ func (c *Context) Redirect(url string, code int) {
 
 // Log gets the Log instance.
 func (c *Context) Log() *log.Logger {
-	return c.Logger
+	return c.logger
 }
 
 // Config gets the application configs.
 func (c *Context) Config() *config.Config {
-	return c.Configs
+	return c.configs
 }
 
 // Env gets the application environment.
