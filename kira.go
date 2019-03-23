@@ -76,23 +76,19 @@ func (a *App) Run(addr ...string) *App {
 	// Register the application routes
 	a.RegisterRoutes()
 
-	// TCP address
-	serverAddr := serverAddr(a.Configs, addr...)
-
-	// validate if the server need tls connection.
-	if !a.Configs.GetBool("server.tls", false) {
-		// Start the server
-		a.StartServer(serverAddr)
-	} else {
-		// TLS
-		a.StartTLSServer(serverAddr)
-	}
-
 	// Timezone
 	tz := a.Configs.GetString("app.timezone")
 	if tz != "" {
 		// Now the framework will parse all the times in the given Timezone.
 		os.Setenv("TZ", tz)
+	}
+
+	// TCP address
+	serverAddr := serverAddr(a.Configs, addr...)
+	if !a.Configs.GetBool("server.tls", false) {
+		a.StartServer(serverAddr)
+	} else {
+		a.StartTLSServer(serverAddr)
 	}
 
 	// App instance
