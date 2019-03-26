@@ -14,7 +14,6 @@ import (
 func getEnv() string {
 	// Get the environment from .kira_env file.
 	if _, err := os.Stat("./.kira_env"); !os.IsNotExist(err) {
-		// path/to/whatever exists
 		kiraEnv, err := ioutil.ReadFile("./.kira_env")
 		if err != nil {
 			log.Panic(err)
@@ -32,7 +31,7 @@ func getEnv() string {
 
 func getConfig() *config.Config {
 	var files = []string{"./testdata/config.toml", "./config.toml", "./config/application.toml"}
-	var env = fmt.Sprintf("./config/environments/%s.toml", getEnv())
+	var env = fmt.Sprintf("./config.%s.toml", getEnv())
 
 	if _, err := os.Stat(env); !os.IsNotExist(err) {
 		files = append(files, env)
