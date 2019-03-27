@@ -29,6 +29,9 @@ const (
 	GB = 1 << 30
 )
 
+// Map a type to represent map, this will be used alot in the internal code.
+type Map map[string]interface{}
+
 // App hold the framework options
 type App struct {
 	Routes      []*Route
