@@ -52,10 +52,10 @@ func TestContextJSONParse(t *testing.T) {
 				t.Errorf(`expect: "{"message":"json"}", have: %+v`, st)
 				return
 			}
-			c.String("parsed")
+			c.WriteString("parsed")
 			return
 		}
-		c.String("not parsed")
+		c.WriteString("not parsed")
 	})
 
 	jsonStr := []byte("{\"message\":\"json\"}\n")

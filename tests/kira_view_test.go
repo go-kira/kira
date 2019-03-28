@@ -68,7 +68,7 @@ func TestViewString(t *testing.T) {
 			c.Error(err)
 		}
 
-		c.String(st)
+		c.WriteString(st)
 	})
 
 	// Request

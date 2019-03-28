@@ -125,6 +125,6 @@ func defaultNotFound(ctx *Context) {
 			ctx.Error(err)
 		}
 	} else {
-		ctx.String("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
+		ctx.WriteString("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
 	}
 }

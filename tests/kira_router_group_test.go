@@ -14,22 +14,22 @@ func TestRouterGroup(t *testing.T) {
 
 	app.Group("prefix", func(g kira.Group) {
 		g.Get("/get", func(c *kira.Context) {
-			c.String("get")
+			c.WriteString("get")
 		})
 		g.Head("/head", func(c *kira.Context) {
 			// The body should be empty
 		})
 		g.Post("/post", func(c *kira.Context) {
-			c.String("post")
+			c.WriteString("post")
 		})
 		g.Put("/put", func(c *kira.Context) {
-			c.String("put")
+			c.WriteString("put")
 		})
 		g.Patch("/patch", func(c *kira.Context) {
-			c.String("patch")
+			c.WriteString("patch")
 		})
 		g.Delete("/delete", func(c *kira.Context) {
-			c.String("delete")
+			c.WriteString("delete")
 		})
 		g.Options("/options", func(c *kira.Context) {
 			// The body should be empty

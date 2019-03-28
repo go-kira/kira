@@ -10,7 +10,7 @@ import (
 
 func TestNotFound(t *testing.T) {
 	s := endpoint("GET", "/method", func(c *kira.Context) {
-		c.String("GET")
+		c.WriteString("GET")
 	})
 
 	// Request
@@ -28,14 +28,14 @@ func TestCustomNotFound(t *testing.T) {
 
 	app.NotFound(func(c *kira.Context) {
 		c.Status(http.StatusNotFound)
-		c.String("custom 404")
+		c.WriteString("custom 404")
 	})
 
 	// Server
 	s := httptest.NewServer(app.RegisterRoutes())
 
 	// Request
-	res, _ := http.Get(url(s, "/not_exists"))
+	res, _ := http.Get(url(s, "/not_exists2"))
 	defer res.Body.Close()
 
 	// Assert

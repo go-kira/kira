@@ -14,7 +14,7 @@ func TestMiddleware(t *testing.T) {
 	app.Use(middleware.New())
 
 	app.Get("/middleware", func(c *kira.Context) {
-		c.String(" content ")
+		c.WriteString(" content ")
 	})
 
 	// Server
@@ -39,7 +39,7 @@ func TestMoreThanMiddleware(t *testing.T) {
 	app.Use(middleware.New2())
 
 	app.Get("/middleware", func(c *kira.Context) {
-		c.String(" content ")
+		c.WriteString(" content ")
 	})
 
 	// Server
@@ -62,7 +62,7 @@ func TestRouteMiddleware(t *testing.T) {
 	app := kira.New()
 
 	app.Get("/route_middleware", func(c *kira.Context) {
-		c.String(" inside ")
+		c.WriteString(" inside ")
 	}).Use(middleware.New())
 
 	// Server
@@ -85,7 +85,7 @@ func TestMoreThanRouteMiddleware(t *testing.T) {
 	app := kira.New()
 
 	app.Get("/route_middleware", func(c *kira.Context) {
-		c.String(" inside ")
+		c.WriteString(" inside ")
 	}).Use(middleware.New(), middleware.New2())
 
 	// Server

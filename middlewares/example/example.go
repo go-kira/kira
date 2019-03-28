@@ -15,10 +15,10 @@ func New() *Example {
 // Middleware handler.
 func (e *Example) Middleware(c *kira.Context, next kira.HandlerFunc) {
 	// Next handlerr
-	c.String("before \n")
+	c.WriteString("before \n")
 
 	next(c)
 
-	c.String("after \n")
+	c.WriteString("after \n")
 	// next.ServeHTTP(ctx.Response(), ctx.Request())
 }

@@ -9,7 +9,7 @@ import (
 
 func TestGET(t *testing.T) {
 	s := endpoint("GET", "/method", func(c *kira.Context) {
-		c.String("GET")
+		c.WriteString("GET")
 	})
 
 	// Request
@@ -42,7 +42,7 @@ func TestHEAD(t *testing.T) {
 
 func TestPOST(t *testing.T) {
 	s := endpoint("POST", "/method", func(c *kira.Context) {
-		c.String("POST")
+		c.WriteString("POST")
 	})
 
 	// Request
@@ -60,7 +60,7 @@ func TestPOST(t *testing.T) {
 
 func TestPUT(t *testing.T) {
 	s := endpoint("PUT", "/method", func(c *kira.Context) {
-		c.String("PUT")
+		c.WriteString("PUT")
 	})
 
 	// Request
@@ -79,7 +79,7 @@ func TestPUT(t *testing.T) {
 
 func TestPATCH(t *testing.T) {
 	s := endpoint("PATCH", "/method", func(c *kira.Context) {
-		c.String("PATCH")
+		c.WriteString("PATCH")
 	})
 
 	// Request
@@ -98,7 +98,7 @@ func TestPATCH(t *testing.T) {
 
 func TestDELETE(t *testing.T) {
 	s := endpoint("DELETE", "/method", func(c *kira.Context) {
-		c.String("DELETE")
+		c.WriteString("DELETE")
 	})
 
 	// Request

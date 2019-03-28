@@ -9,9 +9,9 @@ func New() *Example {
 	return &Example{}
 }
 func (e *Example) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
-	ctx.String("Before")
+	ctx.WriteString("Before")
 	next(ctx)
-	ctx.String("After")
+	ctx.WriteString("After")
 }
 
 // Example2
@@ -21,9 +21,9 @@ func New2() *Example2 {
 	return &Example2{}
 }
 func (e *Example2) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
-	ctx.String("Before2")
+	ctx.WriteString("Before2")
 	next(ctx)
-	ctx.String("After2")
+	ctx.WriteString("After2")
 }
 
 // ContextData
