@@ -67,10 +67,10 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 							"frames":  getFrames(100),
 						})
 					} else {
-						ctx.WriteString("We're sorry, but something went wrong. \n\n")
-						ctx.WriteStringf("Message: %s\nFrames:\n\n", r)
+						ctx.WriteString("<p>We're sorry, but something went wrong.</p> \n\n")
+						ctx.WriteStringf("<p>Message: %s</p>\nFrames:\n\n", r)
 						for _, frame := range getFrames(100) {
-							ctx.WriteStringf("Func: %s \nFile: %s \nLine: %d\n\n", frame.Func.Name(), frame.File, frame.Line)
+							ctx.WriteStringf("<pre>Func: %s \nFile: %s \nLine: %d</pre>\n\n", frame.Func.Name(), frame.File, frame.Line)
 						}
 					}
 				}
