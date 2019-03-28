@@ -2,7 +2,6 @@ package recover
 
 import (
 	"fmt"
-	"net/http"
 	"runtime"
 
 	"github.com/go-kira/kira"
@@ -43,7 +42,7 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 			ctx.Log().Errorf("%s %s", r, requestID)
 
 			// write header
-			ctx.Status(http.StatusInternalServerError)
+			// ctx.Status(http.StatusInternalServerError)
 
 			// if the debug mode is enabled, add the stack to the error view
 			if ctx.Config().GetBool("app.debug", false) {
