@@ -54,6 +54,9 @@ func viewFuncs(ctx *Context) template.FuncMap {
 		"env": func() string {
 			return ctx.Env()
 		},
+		"data": func(key string) interface{} {
+			return ctx.GetData(key)
+		},
 		"config": func(key string) interface{} {
 			return ctx.Config().Get(key)
 		},
