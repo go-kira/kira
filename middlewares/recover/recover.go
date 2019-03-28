@@ -2,6 +2,7 @@ package recover
 
 import (
 	"fmt"
+	"net/http"
 	"runtime"
 
 	"github.com/go-kira/kira"
@@ -41,12 +42,12 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 			// log the error
 			ctx.Log().Errorf("%s %s", r, requestID)
 
-			// write header
-			// ctx.Status(http.StatusInternalServerError)
+			writeHeaders(ctx)
 
 			// if the debug mode is enabled, add the stack to the error view
 			if ctx.Config().GetBool("app.debug", false) {
 				if ctx.WantsJSON() { // JSON
+					// frames
 					var frames []ErrorFrame
 					for _, frame := range getFrames(100) {
 						frames = append(frames, ErrorFrame{
@@ -122,4 +123,14 @@ func getFrames(limit int) (framesSlice []runtime.Frame) {
 	}
 
 	return framesSlice
+}
+
+func writeHeaders(ctx *kira.Context) {
+	if ctx.WantsJSON() {
+		ctx.Response().Header().Set("Content-Type", "application/json")
+	} else {
+		ctx.Response().Header().Set("Content-Type", "text/html")
+	}
+
+	ctx.Status(http.StatusInternalServerError)
 }
