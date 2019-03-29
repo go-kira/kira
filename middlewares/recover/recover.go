@@ -62,7 +62,7 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 					})
 				} else { // HTML
 					if ctx.ViewExists("error/debug") {
-						ctx.View("errors/debug", kira.ViewData{
+						ctx.View("errors/debug", kira.Map{
 							"message": r,
 							"frames":  getFrames(100),
 						})
