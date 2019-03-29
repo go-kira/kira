@@ -8,9 +8,6 @@ import (
 	"strings"
 )
 
-// ViewData represent the view data.
-type ViewData map[string]interface{}
-
 // parse the view and return the view template and the view data.
 func parseView(c *Context, temps string, data ...interface{}) (*template.Template, error) {
 	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
