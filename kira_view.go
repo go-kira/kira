@@ -24,7 +24,7 @@ func parseView(c *Context, temps string, data ...interface{}) (*template.Templat
 
 	// loop throw all templates
 	for _, temp := range templates {
-		tmplPath := viewPath + temp + fileSuffix
+		tmplPath := filepath.Join(viewPath, temp+fileSuffix)
 		if !c.ViewExists(temp) {
 			return nil, fmt.Errorf("kira: template %s not exits", tmplPath)
 		}

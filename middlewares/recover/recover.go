@@ -68,7 +68,7 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 						})
 					} else {
 						ctx.WriteString("<p>We're sorry, but something went wrong.</p> \n\n")
-						ctx.WriteStringf("<p>Message: %s</p>\nFrames:\n\n", r)
+						ctx.WriteStringf("<p>Message: <strong>%s</strong></p>\nFrames:\n\n", r)
 						for _, frame := range getFrames(100) {
 							ctx.WriteStringf("<pre>Func: %s \nFile: %s \nLine: %d</pre>\n\n", frame.Func.Name(), frame.File, frame.Line)
 						}
