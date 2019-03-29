@@ -27,6 +27,15 @@ func (c *Context) WriteStringf(format string, a ...interface{}) {
 	fmt.Fprintf(c.Response(), format, a...)
 }
 
+// WriteHTML send content of html with the HTTP reply as an HTML content.
+func (c *Context) WriteHTML(html string) {
+	c.Response().Header().Set("Content-Type", "text/html")
+	_, err := io.WriteString(c.Response(), html)
+	if err != nil {
+		c.Error(err)
+	}
+}
+
 // File send a file with the HTTP reply.
 func (c *Context) File(name string) {
 	http.ServeFile(c.Response(), c.Request(), name)
