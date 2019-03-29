@@ -3,7 +3,7 @@ package kira
 import (
 	"bytes"
 	"os"
-	"strings"
+	"path/filepath"
 )
 
 // View send an html/template with an HTTP reply.
@@ -18,7 +18,6 @@ func (c *Context) View(temps string, data ...interface{}) error {
 	}
 
 	// execute the templates
-
 	err = template.Execute(c.Response(), parseViewData(data...))
 	if err != nil {
 		return err
@@ -46,9 +45,9 @@ func (c *Context) ViewToString(temps string, data ...interface{}) (string, error
 // ViewExists Validate if the view exists.
 func (c *Context) ViewExists(tmp string) bool {
 	fileSuffix := c.Config().GetString("views.file_suffix", ".go.html")
-	viewPath := c.Config().GetString("views.path", "app/views/")
+	viewPath := c.Config().GetString("views.path", "./app/views/")
 
-	templatePath := strings.Join([]string{viewPath, tmp, fileSuffix}, "")
+	templatePath := filepath.Join(viewPath, tmp+fileSuffix)
 	if _, err := os.Stat(templatePath); os.IsNotExist(err) {
 		return false
 	}
