@@ -22,7 +22,10 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	ctx.Response().Header().Add("Vary", "Accept-Encoding")
 	if strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
 		ctx.Response().Header().Set("Content-Encoding", "gzip")
-		gz := gzip.NewWriter(ctx.Response())
+		gz, err := gzip.NewWriterLevel(ctx.Response(), ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
+		if err != nil {
+			ctx.Error(err)
+		}
 		defer gz.Close()
 
 		gzr := gzipResponseWriter{Writer: gz, ResponseWriter: ctx.Response()}
