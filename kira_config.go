@@ -30,8 +30,8 @@ func getEnv() string {
 }
 
 func getConfig() *config.Config {
-	var files = []string{"./testdata/config.toml", "./config.toml", "./config/application.toml"}
-	var env = fmt.Sprintf("./config.%s.toml", getEnv())
+	var files = []string{"./testdata/.config", "./.config", "./config/.application"}
+	var env = fmt.Sprintf("./.config.%s", getEnv())
 
 	if _, err := os.Stat(env); !os.IsNotExist(err) {
 		files = append(files, env)
