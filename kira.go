@@ -105,6 +105,11 @@ func (a *App) NotFound(ctx HandlerFunc) {
 
 // default not found handler.
 func defaultNotFound(ctx *Context) {
+	if ctx.WantsJSON() {
+		ctx.Response().Header().Set("Content-Type", "application/json")
+	} else {
+		ctx.Response().Header().Set("Content-Type", "text/html")
+	}
 	ctx.Status(http.StatusNotFound)
 
 	// JSON
@@ -125,6 +130,6 @@ func defaultNotFound(ctx *Context) {
 			ctx.Error(err)
 		}
 	} else {
-		ctx.WriteString("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
+		ctx.WriteHTML("<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>404 Not Found</body></html>")
 	}
 }
