@@ -74,5 +74,8 @@ func viewFuncs(ctx *Context) template.FuncMap {
 		"html": func(value interface{}) template.HTML {
 			return template.HTML(fmt.Sprint(value))
 		},
+		"htmlEscape": func(value interface{}) string {
+			return template.HTMLEscapeString(fmt.Sprint(value))
+		},
 	}
 }
