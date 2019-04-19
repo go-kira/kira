@@ -71,5 +71,8 @@ func viewFuncs(ctx *Context) template.FuncMap {
 			js, _ := json.Marshal(v)
 			return template.JS(js)
 		},
+		"html": func(value interface{}) template.HTML {
+			return template.HTML(fmt.Sprint(value))
+		},
 	}
 }
