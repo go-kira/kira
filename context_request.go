@@ -15,9 +15,12 @@ func (c *Context) HasQuery(key string) bool {
 	if v == nil {
 		return false
 	}
-	vs := v[key]
 
-	return len(vs) == 0
+	// Check if the query exists in the url.
+	if _, ok := v[key]; ok {
+		return true
+	}
+	return false
 }
 
 // Param is an alias of var method.
