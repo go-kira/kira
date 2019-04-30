@@ -86,19 +86,18 @@ func (app *App) Run(config interface{}) *App {
 	}
 
 	// Server
-	var server *http.Server
+	server := &http.Server{
+		Handler: app.Router,
+	}
 
 	switch config.(type) {
 	case *http.Server:
 		server = config.(*http.Server)
 		server.Handler = app.Router
 	case string:
-		server = &http.Server{
-			Addr:    serverAddr(app.Configs, config.(string)),
-			Handler: app.Router,
-		}
+		server.Addr = serverAddr(app.Configs, config.(string))
 	default:
-		log.Panic("kira: Unspported type in Run args")
+		server.Addr = serverAddr(app.Configs)
 	}
 
 	if !app.Configs.GetBool("server.tls", false) {
