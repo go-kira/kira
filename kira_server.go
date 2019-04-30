@@ -12,13 +12,7 @@ import (
 )
 
 // StartServer - Start kira server
-func (app *App) StartServer(addr string) {
-	// define the server
-	server := &http.Server{
-		Addr:    addr,
-		Handler: app.Router,
-	}
-
+func (app *App) StartServer(server *http.Server) {
 	// Gracefully shutdown
 	go app.GracefullyShutdown(server)
 
@@ -36,11 +30,7 @@ func (app *App) StartServer(addr string) {
 //  - openssl genrsa -out server.key 2048
 //  - openssl ecparam -genkey -name secp384r1 -out server.key
 //  - openssl req -new -x509 -sha256 -key server.key -out server.crt -days 3650
-func (app *App) StartTLSServer(addr string) {
-	server := &http.Server{
-		Addr:    addr,
-		Handler: app.Router,
-	}
+func (app *App) StartTLSServer(server *http.Server) {
 
 	// Gracefully shutdown
 	go app.GracefullyShutdown(server)

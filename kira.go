@@ -73,34 +73,47 @@ func New() *App {
 }
 
 // Run the framework
-func (a *App) Run(addr ...string) *App {
+func (app *App) Run(config interface{}) *App {
 	fmt.Printf("%v", hero)
 
 	// Register the application routes
-	a.RegisterRoutes()
+	app.RegisterRoutes()
 
 	// Timezone
-	tz := a.Configs.GetString("app.timezone")
+	tz := app.Configs.GetString("app.timezone")
 	if tz != "" {
-		// Now the framework will parse all the times in the given Timezone.
 		os.Setenv("TZ", tz)
 	}
 
-	// TCP address
-	serverAddr := serverAddr(a.Configs, addr...)
-	if !a.Configs.GetBool("server.tls", false) {
-		a.StartServer(serverAddr)
+	// Server
+	var server *http.Server
+
+	switch config.(type) {
+	case *http.Server:
+		server = config.(*http.Server)
+		server.Handler = app.Router
+	case string:
+		server = &http.Server{
+			Addr:    serverAddr(app.Configs, config.(string)),
+			Handler: app.Router,
+		}
+	default:
+		log.Panic("kira: Unspported type in Run args")
+	}
+
+	if !app.Configs.GetBool("server.tls", false) {
+		app.StartServer(server)
 	} else {
-		a.StartTLSServer(serverAddr)
+		app.StartTLSServer(server)
 	}
 
 	// App instance
-	return a
+	return app
 }
 
 // NotFound custom not found handler.
-func (a *App) NotFound(ctx HandlerFunc) {
-	a.NotFoundHandler = ctx
+func (app *App) NotFound(ctx HandlerFunc) {
+	app.NotFoundHandler = ctx
 }
 
 // default not found handler.
