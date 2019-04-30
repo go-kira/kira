@@ -73,7 +73,7 @@ func New() *App {
 }
 
 // Run the framework
-func (app *App) Run(config interface{}) *App {
+func (app *App) Run(args ...interface{}) *App {
 	fmt.Printf("%v", hero)
 
 	// Register the application routes
@@ -88,6 +88,13 @@ func (app *App) Run(config interface{}) *App {
 	// Server
 	server := &http.Server{
 		Handler: app.Router,
+	}
+
+	var config interface{}
+	if len(args) > 0 {
+		config = args[0]
+	} else {
+		config = nil
 	}
 
 	switch config.(type) {
