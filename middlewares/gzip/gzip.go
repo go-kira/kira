@@ -31,7 +31,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		}
 		return gz
 	}
-	mediaType, params, err := mime.ParseMediaType(ctx.Response().Get("Content-Type"))
+	mediaType, params, err := mime.ParseMediaType(ctx.Response().Header().Get("Content-Type"))
 	log.Println(mediaType, params, err)
 
 	if !strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
