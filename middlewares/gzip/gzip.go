@@ -47,8 +47,9 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		defer func() {
 			gz.Close()
 		}()
+	} else {
+		log.Println("gzip: no compress")
 	}
-	log.Println("gzip: no compress")
 	next(ctx)
 }
 
