@@ -32,8 +32,6 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		ctx.SetResponse(gzr)
 
 		next(ctx)
-	} else {
-		next(ctx)
 	}
 }
 
