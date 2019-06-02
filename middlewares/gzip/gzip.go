@@ -54,6 +54,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		gz.Close()
 	}()
 
+	ctx.Response().Header().Set("Content-Type", "application/json")
 	log.Println("gzip: type: ", ctx.Response().Header().Get("Content-Type"))
 	// Next to the next handler.
 	next(ctx)
@@ -66,7 +67,7 @@ type gzipResponseWriter struct {
 }
 
 func (w *gzipResponseWriter) WriteHeader(code int) {
-	// w.Header().Del("Content-Length")
+	w.Header().Del("Content-Length")
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
