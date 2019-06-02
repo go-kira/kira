@@ -4,13 +4,14 @@ import (
 	"compress/gzip"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"sync"
 
 	"github.com/go-kira/kira"
 )
+
+var gzPool sync.Pool
 
 // New ...
 func New() Gzip {
@@ -22,7 +23,6 @@ type Gzip struct{}
 
 // Middleware ...
 func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
-	var gzPool sync.Pool
 	gzPool.New = func() interface{} {
 		gz, err := gzip.NewWriterLevel(ioutil.Discard, ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
 		if err != nil {
@@ -31,25 +31,28 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		return gz
 	}
 
-	ctx.Response().Header().Add("Vary", "Accept-Encoding")
-	if strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
-		log.Println("gzip: compressing")
-		gz := gzPool.Get().(*gzip.Writer)
-		defer gzPool.Put(gz)
-		defer gz.Reset(ioutil.Discard)
-		gz.Reset(ctx.Response())
-
-		ctx.Response().Header().Set("Content-Encoding", "gzip")
-		ctx.SetResponse(&gzipResponseWriter{
-			Writer:         gz,
-			ResponseWriter: ctx.Response(),
-		})
-		defer func() {
-			gz.Close()
-		}()
-	} else {
-		log.Println("gzip: no compress")
+	if !strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
+		next(ctx)
+		return
 	}
+
+	// GZip
+	gz := gzPool.Get().(*gzip.Writer)
+	defer gzPool.Put(gz)
+	defer gz.Reset(ioutil.Discard)
+	gz.Reset(ctx.Response())
+
+	ctx.Response().Header().Set("Content-Encoding", "gzip")
+	ctx.Response().Header().Set("Vary", "Accept-Encoding")
+	ctx.SetResponse(&gzipResponseWriter{
+		Writer:         gz,
+		ResponseWriter: ctx.Response(),
+	})
+	defer func() {
+		gz.Close()
+	}()
+
+	// Next to the next handler.
 	next(ctx)
 }
 
