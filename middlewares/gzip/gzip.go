@@ -56,7 +56,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		gz.Close()
 	}()
 
-	ctx.Response().Header().Set("Content-Type", "application/json")
+	// ctx.Response().Header().Set("Content-Type", "application/json")
 	log.Println("gzip: type: ", ctx.Response().Header().Get("Content-Type"))
 	// Next to the next handler.
 	next(ctx)
