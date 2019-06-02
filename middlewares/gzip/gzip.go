@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -31,6 +32,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	}
 
 	if strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
+		log.Println("gzip: start")
 		gz := gzPool.Get().(*gzip.Writer)
 		defer gzPool.Put(gz)
 		defer gz.Reset(ioutil.Discard)
@@ -45,8 +47,9 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		defer func() {
 			gz.Close()
 		}()
-		// next(ctx)
+		next(ctx)
 	}
+	log.Println("gzip: no compress")
 }
 
 // Custom ResponseWriter for gzip
