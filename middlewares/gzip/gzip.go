@@ -3,7 +3,6 @@ package gzip
 import (
 	"compress/gzip"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"sync"
@@ -24,7 +23,7 @@ type Gzip struct{}
 // Middleware ...
 func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	gzPool.New = func() interface{} {
-		gz, err := gzip.NewWriterLevel(ioutil.Discard, ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
+		gz, err := gzip.NewWriterLevel(nil, ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
 		if err != nil {
 			panic(err)
 		}
@@ -39,7 +38,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	// GZip
 	gz := gzPool.Get().(*gzip.Writer)
 	defer gzPool.Put(gz)
-	defer gz.Reset(ioutil.Discard)
+	defer gz.Reset(nil)
 	gz.Reset(ctx.Response())
 
 	ctx.Response().Header().Set("Content-Encoding", "gzip")
