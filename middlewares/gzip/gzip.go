@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -60,6 +61,7 @@ func (w *gzipResponseWriter) WriteHeader(code int) {
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
+	log.Println(w.Header().Get("Content-Type"))
 	if w.Header().Get("Content-Type") == "" {
 		w.Header().Set("Content-Type", http.DetectContentType(b))
 	}
