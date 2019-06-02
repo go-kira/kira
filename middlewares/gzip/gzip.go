@@ -19,8 +19,8 @@ type Gzip struct{}
 
 // Middleware ...
 func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
-	ctx.Response().Header().Add("Vary", "Accept-Encoding")
 	if strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
+		ctx.Response().Header().Add("Vary", "Accept-Encoding")
 		ctx.Response().Header().Set("Content-Encoding", "gzip")
 		gz, err := gzip.NewWriterLevel(ctx.Response(), ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
 		if err != nil {
@@ -28,7 +28,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		}
 		defer gz.Close()
 
-		gzr := gzipResponseWriter{Writer: gz, ResponseWriter: ctx.Response()}
+		gzr := &gzipResponseWriter{Writer: gz, ResponseWriter: ctx.Response()}
 		ctx.SetResponse(gzr)
 
 		next(ctx)
@@ -43,19 +43,22 @@ type gzipResponseWriter struct {
 	http.ResponseWriter
 }
 
-func (w gzipResponseWriter) WriteHeader(code int) {
+func (w *gzipResponseWriter) WriteHeader(code int) {
 	if code == http.StatusNoContent {
 		w.ResponseWriter.Header().Del("Content-Encoding")
 	}
 	w.Header().Del("Content-Length")
 	w.ResponseWriter.WriteHeader(code)
 }
-func (w gzipResponseWriter) Write(b []byte) (int, error) {
+func (w *gzipResponseWriter) Write(b []byte) (int, error) {
 	if w.Header().Get("Content-Type") == "" {
 		w.Header().Set("Content-Type", http.DetectContentType(b))
 	}
 	return w.Writer.Write(b)
 }
-func (w gzipResponseWriter) Flush() {
+func (w *gzipResponseWriter) Flush() {
 	w.Writer.(*gzip.Writer).Flush()
+	if flusher, ok := w.ResponseWriter.(http.Flusher); ok {
+		flusher.Flush()
+	}
 }
