@@ -3,8 +3,10 @@ package gzip
 import (
 	"compress/gzip"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/go-kira/kira"
 )
@@ -19,20 +21,32 @@ type Gzip struct{}
 
 // Middleware ...
 func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
+	var gzPool sync.Pool
+	gzPool.New = func() interface{} {
+		gz, err := gzip.NewWriterLevel(ioutil.Discard, ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
+		if err != nil {
+			panic(err)
+		}
+		return gz
+	}
+
 	if strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
+		gz := gzPool.Get().(*gzip.Writer)
+		defer gzPool.Put(gz)
+		defer gz.Reset(ioutil.Discard)
+		gz.Reset(ctx.Response())
+
 		ctx.Response().Header().Add("Vary", "Accept-Encoding")
 		ctx.Response().Header().Set("Content-Encoding", "gzip")
-		gz, err := gzip.NewWriterLevel(ctx.Response(), ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
-		if err != nil {
-			ctx.Error(err)
-		}
-		defer gz.Close()
-
-		gzr := &gzipResponseWriter{Writer: gz, ResponseWriter: ctx.Response()}
-		ctx.SetResponse(gzr)
-		next(ctx)
+		ctx.SetResponse(&gzipResponseWriter{
+			Writer:         gz,
+			ResponseWriter: ctx.Response(),
+		})
+		defer func() {
+			gz.Close()
+		}()
 	}
-	return
+	next(ctx)
 }
 
 // Custom ResponseWriter for gzip
@@ -42,21 +56,9 @@ type gzipResponseWriter struct {
 }
 
 func (w *gzipResponseWriter) WriteHeader(code int) {
-	if code == http.StatusNoContent {
-		w.ResponseWriter.Header().Del("Content-Encoding")
-	}
 	w.Header().Del("Content-Length")
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
-	// if w.Header().Get("Content-Type") == "" {
-	// 	w.Header().Set("Content-Type", http.DetectContentType(b))
-	// }
 	return w.Writer.Write(b)
-}
-func (w *gzipResponseWriter) Flush() {
-	w.Writer.(*gzip.Writer).Flush()
-	if flusher, ok := w.ResponseWriter.(http.Flusher); ok {
-		flusher.Flush()
-	}
 }
