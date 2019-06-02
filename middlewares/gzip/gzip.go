@@ -46,10 +46,12 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 
 	ctx.Response().Header().Set("Content-Encoding", "gzip")
 	ctx.Response().Header().Set("Vary", "Accept-Encoding")
-	ctx.SetResponse(&gzipResponseWriter{
+	gzw := &gzipResponseWriter{
 		Writer:         gz,
 		ResponseWriter: ctx.Response(),
-	})
+	}
+
+	ctx.SetResponse(gzw)
 	defer func() {
 		gz.Close()
 	}()
