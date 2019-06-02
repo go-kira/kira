@@ -45,7 +45,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		defer func() {
 			gz.Close()
 		}()
-		next(ctx)
+		// next(ctx)
 	}
 }
 
