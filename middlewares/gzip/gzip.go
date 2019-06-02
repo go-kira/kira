@@ -38,8 +38,8 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		defer gz.Reset(ioutil.Discard)
 		gz.Reset(ctx.Response())
 
-		ctx.Response().Header().Add("Vary", "Accept-Encoding")
 		ctx.Response().Header().Set("Content-Encoding", "gzip")
+		ctx.Response().Header().Set("Vary", "Accept-Encoding")
 		ctx.SetResponse(&gzipResponseWriter{
 			Writer:         gz,
 			ResponseWriter: ctx.Response(),
