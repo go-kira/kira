@@ -66,10 +66,12 @@ type gzipResponseWriter struct {
 }
 
 func (w *gzipResponseWriter) WriteHeader(code int) {
-	w.Header().Del("Content-Length")
+	// w.Header().Del("Content-Length")
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
-	w.Header().Set("Content-Type", http.DetectContentType(b))
+	if w.Header().Get("Content-Type") == "" {
+		w.Header().Set("Content-Type", http.DetectContentType(b))
+	}
 	return w.Writer.Write(b)
 }
