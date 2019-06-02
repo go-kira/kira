@@ -31,6 +31,7 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		return gz
 	}
 
+	ctx.Response().Header().Add("Vary", "Accept-Encoding")
 	if strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
 		log.Println("gzip: compressing")
 		gz := gzPool.Get().(*gzip.Writer)
@@ -39,7 +40,6 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		gz.Reset(ctx.Response())
 
 		ctx.Response().Header().Set("Content-Encoding", "gzip")
-		ctx.Response().Header().Set("Vary", "Accept-Encoding")
 		ctx.SetResponse(&gzipResponseWriter{
 			Writer:         gz,
 			ResponseWriter: ctx.Response(),
