@@ -23,7 +23,6 @@ type Gzip struct{}
 
 // Middleware ...
 func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
-	log.Println("gzip: type:" + ctx.Response().Header().Get("Content-Type"))
 	gzPool.New = func() interface{} {
 		gz, err := gzip.NewWriterLevel(nil, ctx.Config().GetInt("gzip.level", gzip.DefaultCompression))
 		if err != nil {
@@ -68,6 +67,7 @@ func (w *gzipResponseWriter) WriteHeader(code int) {
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
+	log.Println("gzip: type:" + w.Header().Get("Content-Type"))
 	if w.Header().Get("Content-Type") == "" {
 		w.Header().Set("Content-Type", http.DetectContentType(b))
 	}
