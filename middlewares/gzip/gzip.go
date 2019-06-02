@@ -30,8 +30,9 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 
 		gzr := &gzipResponseWriter{Writer: gz, ResponseWriter: ctx.Response()}
 		ctx.SetResponse(gzr)
+		next(ctx)
 	}
-	next(ctx)
+	return
 }
 
 // Custom ResponseWriter for gzip
