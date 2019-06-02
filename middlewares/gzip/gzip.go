@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"io"
 	"log"
+	"mime"
 	"net/http"
 	"strings"
 	"sync"
@@ -30,6 +31,8 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		}
 		return gz
 	}
+	mediaType, params, err := mime.ParseMediaType(ctx.Response().Get("Content-Type"))
+	log.Println(mediaType, params, err)
 
 	if !strings.Contains(ctx.Request().Header.Get("Accept-Encoding"), "gzip") {
 		next(ctx)
@@ -67,7 +70,6 @@ func (w *gzipResponseWriter) WriteHeader(code int) {
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
-	log.Println("gzip: type:" + w.Header().Get("Content-Type"))
 	if w.Header().Get("Content-Type") == "" {
 		w.Header().Set("Content-Type", http.DetectContentType(b))
 	}
