@@ -30,9 +30,8 @@ func (g Gzip) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 
 		gzr := &gzipResponseWriter{Writer: gz, ResponseWriter: ctx.Response()}
 		ctx.SetResponse(gzr)
-
-		next(ctx)
 	}
+	next(ctx)
 }
 
 // Custom ResponseWriter for gzip
@@ -49,9 +48,9 @@ func (w *gzipResponseWriter) WriteHeader(code int) {
 	w.ResponseWriter.WriteHeader(code)
 }
 func (w *gzipResponseWriter) Write(b []byte) (int, error) {
-	if w.Header().Get("Content-Type") == "" {
-		w.Header().Set("Content-Type", http.DetectContentType(b))
-	}
+	// if w.Header().Get("Content-Type") == "" {
+	// 	w.Header().Set("Content-Type", http.DetectContentType(b))
+	// }
 	return w.Writer.Write(b)
 }
 func (w *gzipResponseWriter) Flush() {
