@@ -9,7 +9,7 @@ import (
 // View send an html/template with an HTTP reply.
 func (c *Context) View(temps string, data ...interface{}) error {
 	// Set content type
-	c.Response().Header().Set("Content-Type", "text/html")
+	// c.Response().Header().Set("Content-Type", "text/html")
 
 	// parse the templates
 	template, err := parseView(c, temps, data)
