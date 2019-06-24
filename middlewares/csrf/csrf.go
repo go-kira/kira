@@ -20,11 +20,16 @@ func (c *CSRF) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 	// Here we convert the next context handler to the normal http.Handler.
 	// We just wrap it so we can use it later with Gorilla CSRF middleware.
 	var handler http.Handler
+	// 3. Continue to the next handler
 	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx.SetRequest(r)
+		ctx.SetResponse(w)
+
+		// Continue
 		next(ctx)
 	})
 
-	// Set the token in the header.
+	// 2. Set the token in the header.
 	handler = func(n http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			token := csrf.Token(r)
@@ -40,7 +45,7 @@ func (c *CSRF) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		})
 	}(handler)
 
-	// Run the csrf middleware.
+	// 1. Run the csrf middleware.
 	handler = csrf.Protect(
 		[]byte(ctx.Config().GetString("app.key")),
 		csrf.FieldName(ctx.Config().GetString("csrf.field_name", "_token")),
@@ -49,7 +54,6 @@ func (c *CSRF) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 		csrf.Secure(ctx.Config().GetBool("csrf.secure", true)),
 	)(handler)
 
+	// Excute the middleware
 	handler.ServeHTTP(ctx.Response(), ctx.Request())
-
-	next(ctx)
 }
