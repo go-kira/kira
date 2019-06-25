@@ -64,8 +64,12 @@ func viewFuncs(ctx *Context) template.FuncMap {
 			// first arg is sep, remaining args are strings to join
 			return strings.Join(s[1:], s[0])
 		},
-		"partial": func(filename string, data ...interface{}) (string, error) {
-			return ctx.ViewToString(filename, data...)
+		"partial": func(filename string, data ...interface{}) (template.HTML, error) {
+			st, err := ctx.ViewToString(filename, data...)
+			if err != nil {
+				return "", err
+			}
+			return template.HTML(st), nil
 		},
 		"json": func(v interface{}) template.JS {
 			js, _ := json.Marshal(v)
