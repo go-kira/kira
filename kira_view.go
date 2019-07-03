@@ -30,7 +30,11 @@ func parseView(c *Context, temps string, data ...interface{}) (*template.Templat
 	}
 
 	// parse templates
-	template, err := template.New(baseTemplate).Funcs(viewFuncs(c)).ParseFiles(templatesFiles...)
+	template, err := template.New(baseTemplate).Delims(
+		c.Config().GetString("template.left_delimiter", "{{"),
+		c.Config().GetString("template.right_delimiter", "}}"),
+	).Funcs(viewFuncs(c)).ParseFiles(templatesFiles...)
+	// template, err := template.New(baseTemplate).Funcs(viewFuncs(c)).ParseFiles(templatesFiles...)
 	if err != nil {
 		return nil, err
 	}
