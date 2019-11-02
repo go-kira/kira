@@ -39,3 +39,15 @@ func (app *App) GetService(name string) (ServiceInstance, error) {
 	}
 	return m, nil
 }
+
+// LoadService ...
+func (app *App) LoadService(name string) interface{} {
+	app.mutex.Lock()
+	service, ok := app.Services[name]
+	app.mutex.Unlock()
+	if !ok {
+		panic("unknown service: " + name)
+	}
+
+	return service.New().(interface{})
+}
