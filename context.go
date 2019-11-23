@@ -65,13 +65,6 @@ func (c *Context) Response() http.ResponseWriter {
 	return c.response
 }
 
-// WriteStatus Write HTTP header to the response and also write the status message to the body.
-func (c *Context) WriteStatus(code int) {
-	c.Response().WriteHeader(code)
-
-	fmt.Fprint(c.Response(), http.StatusText(code))
-}
-
 // Redirect replies to the request with a redirect to url,
 func (c *Context) Redirect(url string, code int) {
 	http.Redirect(c.Response(), c.Request(), url, code)
@@ -92,11 +85,6 @@ func (c *Context) Env() string {
 	return c.env
 }
 
-// Status send a specific status with the HTTP reply.
-func (c *Context) Status(code int) {
-	c.Response().WriteHeader(code)
-}
-
 // Error stop the request with panic
 func (c *Context) Error(msg interface{}, status ...int) {
 	if len(status) > 0 {
@@ -105,4 +93,12 @@ func (c *Context) Error(msg interface{}, status ...int) {
 
 	// Just panic and the recover will come to save us :)
 	panic(fmt.Sprint(msg))
+}
+
+// Err checks if the error not empty.
+// It's will redirect the error to Error method if there an error.
+func (c *Context) Err(err error, status ...int) {
+	if err != nil {
+		c.Error(err, status...)
+	}
 }

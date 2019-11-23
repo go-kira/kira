@@ -36,6 +36,18 @@ func (c *Context) WriteHTML(html string) {
 	}
 }
 
+// WriteStatus Write HTTP header to the response and also write the status message to the body.
+func (c *Context) WriteStatus(code int) {
+	c.Response().WriteHeader(code)
+
+	fmt.Fprint(c.Response(), http.StatusText(code))
+}
+
+// Status send a specific status with the HTTP reply.
+func (c *Context) Status(code int) {
+	c.Response().WriteHeader(code)
+}
+
 // File send a file with the HTTP reply.
 func (c *Context) File(name string) {
 	http.ServeFile(c.Response(), c.Request(), name)

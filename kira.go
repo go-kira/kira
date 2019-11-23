@@ -40,8 +40,6 @@ type App struct {
 	Log         *log.Logger
 	Configs     *config.Config
 	Env         string
-	Services    map[string]ServiceInstance
-
 	// Not found handler
 	NotFoundHandler HandlerFunc
 
@@ -57,7 +55,6 @@ func New() *App {
 	app.Configs = getConfig()
 	app.Log = setupLogger(app.Configs)
 	app.Router = httprouter.New()
-	app.Services = make(map[string]ServiceInstance)
 
 	// Context pool
 	app.pool = &sync.Pool{
