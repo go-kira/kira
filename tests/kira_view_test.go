@@ -43,9 +43,9 @@ func TestViewTemplate(t *testing.T) {
 	}
 }
 
-func TestViewTemplateInclude(t *testing.T) {
+func TestViewTemplatePartial(t *testing.T) {
 	s := endpoint("GET", "/method", func(c *kira.Context) {
-		c.View("include")
+		c.View("partial")
 	})
 
 	// Request
@@ -56,8 +56,8 @@ func TestViewTemplateInclude(t *testing.T) {
 	content := contentS(res.Body)
 
 	// Assert
-	if content != "Included" {
-		t.Errorf("expect: `Included`, have: %s", content)
+	if content != "Partial" {
+		t.Errorf("expect: `Partial`, have: %s", content)
 	}
 }
 
