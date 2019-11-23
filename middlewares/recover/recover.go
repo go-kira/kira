@@ -102,6 +102,7 @@ func (rc *Recover) Middleware(ctx *kira.Context, next kira.HandlerFunc) {
 func getFrames(limit int) (framesSlice []runtime.Frame) {
 	// Ask runtime.Callers for up to 10 pcs, including runtime.Callers itself.
 	pc := make([]uintptr, limit)
+	// TODO: later we need to hide unnecessary callers.
 	n := runtime.Callers(0, pc)
 	if n == 0 {
 		// No pcs available. Stop now.

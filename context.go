@@ -86,19 +86,16 @@ func (c *Context) Env() string {
 }
 
 // Error stop the request with panic
-func (c *Context) Error(msg interface{}, status ...int) {
-	if len(status) > 0 {
-		c.Status(status[0])
-	}
-
+func (c *Context) Error(msg interface{}) {
 	// Just panic and the recover will come to save us :)
+	// TODO: later we need something better than this.
 	panic(fmt.Sprint(msg))
 }
 
 // Err checks if the error not empty.
 // It's will redirect the error to Error method if there an error.
-func (c *Context) Err(err error, status ...int) {
+func (c *Context) Err(err error) {
 	if err != nil {
-		c.Error(err, status...)
+		c.Error(err)
 	}
 }
