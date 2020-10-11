@@ -12,7 +12,7 @@ import (
 // JWT - Middleware.
 type JWT struct{}
 
-// New - return Limitbody instance
+// New - return JWT instance
 func New() *JWT {
 	return &JWT{}
 }

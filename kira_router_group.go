@@ -32,10 +32,6 @@ func (g Group) path(path string) string {
 	return httprouter.CleanPath(g.prefix + httprouter.CleanPath(path))
 }
 
-func (g Group) clean(path string) string {
-	return httprouter.CleanPath(path)
-}
-
 func (g Group) buildMeddlewares(md ...Middleware) (mds []Middleware) {
 	mds = append(mds, md...)
 	mds = append(mds, g.middlewares...)
@@ -45,7 +41,7 @@ func (g Group) buildMeddlewares(md ...Middleware) (mds []Middleware) {
 
 // Group adds ap refix to another grouped routes.
 func (g Group) Group(prefix string, group GroupFunc, middlewares ...Middleware) {
-	g.app.Group(g.clean(g.prefix)+g.clean(prefix), func(g Group) {
+	g.app.Group(httprouter.CleanPath(g.prefix)+httprouter.CleanPath(prefix), func(g Group) {
 		group(g)
 	}, g.buildMeddlewares(middlewares...)...)
 }

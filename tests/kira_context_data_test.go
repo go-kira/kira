@@ -14,6 +14,14 @@ func TestContextData(t *testing.T) {
 		// Set the data to the context.
 		c.SetData("key", "value")
 
+		if c.HasData("key") != true {
+			t.Errorf("expect: `true`, have: %t", c.HasData("key"))
+		}
+
+		if c.HasData("key_not_exists") != false {
+			t.Errorf("expect: `false`, have: %t", c.HasData("key_not_exists"))
+		}
+
 		// Get the data from the context.
 		if c.GetData("key").(string) != "value" {
 			t.Errorf("expect: `value`, have: %s", c.GetData("key").(string))

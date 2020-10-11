@@ -25,9 +25,7 @@ func (c *Context) HasQuery(key string) bool {
 
 // Param is an alias of var method.
 func (c *Context) Param(param string) string {
-	params := httprouter.ParamsFromContext(c.Request().Context())
-
-	return params.ByName(param)
+	return httprouter.ParamsFromContext(c.Request().Context()).ByName(param)
 }
 
 // ParseMultipartForm pars

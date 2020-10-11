@@ -9,7 +9,7 @@ require (
 	github.com/go-kira/log v0.0.0-20190310004359-6e34bb31897c
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/csrf v1.5.1
-	github.com/julienschmidt/httprouter v1.2.0
+	github.com/julienschmidt/httprouter v1.3.0
 	golang.org/x/crypto v0.0.0-20190426145343-a29dc8fdc734
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.2.2 // indirect
