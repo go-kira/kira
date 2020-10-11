@@ -95,7 +95,7 @@ func (c *Context) Error(msg interface{}) {
 // Err checks if the error not empty.
 // It's will redirect the error to Error method if there an error.
 func (c *Context) Err(err error) {
-	if err.(error) != nil {
+	if err != nil {
 		c.Error(err)
 	}
 }
