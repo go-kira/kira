@@ -33,7 +33,7 @@ func (rc *Recover) Middleware(ctx *Context, next HandlerFunc) {
 		// We have a problem here
 		if r != nil {
 			// log the error
-			ctx.Log().Errorf("%s", r)
+			ctx.Log().Errorf("%s\n", r)
 
 			writeHeaders(ctx)
 
