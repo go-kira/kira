@@ -3,7 +3,9 @@ package kira
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
+	"time"
 
 	"github.com/go-kira/log"
 
@@ -27,7 +29,10 @@ type Context struct {
 	logger   *log.Logger
 	configs  *config.Config
 	// The data associated with the request.
-	data map[string]interface{}
+	data       map[string]interface{}
+	statusCode int
+	requestID  string
+	startAt    time.Time
 	// environment
 	env string
 }
@@ -37,7 +42,7 @@ type Context struct {
 // 	ctx := contextPool.Get().(*Context)
 // 	ctx.response = w
 // 	ctx.request = r
-// 	ctx.Logger = app.Log
+// 	ctx.Logger = app.logger
 // 	ctx.Configs = app.Configs
 // 	ctx.data = make(map[string]interface{})
 // 	ctx.env = app.Env
@@ -72,12 +77,38 @@ func (c *Context) Redirect(url string, code int) {
 
 // Log gets the Log instance.
 func (c *Context) Log() *log.Logger {
-	return c.logger
+	return setupLogger(c.Config(), c.logger.Writer, log.Fields{
+		"status":     strconv.Itoa(c.StatusCode()),
+		"method":     c.Request().Method,
+		"path":       c.Request().RequestURI,
+		"duration":   time.Since(c.startAt).String(),
+		"request_id": c.RequestID(),
+	})
 }
 
 // Config gets the application configs.
 func (c *Context) Config() *config.Config {
 	return c.configs
+}
+
+// Code sets response status statusCode.
+func (c *Context) SetStatusCode(code int) {
+	c.statusCode = code
+}
+
+// Code gets response status statusCode.
+func (c *Context) StatusCode() int {
+	return c.statusCode
+}
+
+// Code sets response status statusCode.
+func (c *Context) SetRequestID(id string) {
+	c.requestID = id
+}
+
+// Code gets response status statusCode.
+func (c *Context) RequestID() string {
+	return c.requestID
 }
 
 // Env gets the application environment.

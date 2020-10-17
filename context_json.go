@@ -8,7 +8,7 @@ import (
 func (c *Context) JSON(data interface{}, code ...int) {
 	c.Response().Header().Set("Content-Type", "application/json")
 
-	// Status code
+	// Status statusCode
 	if len(code) > 0 {
 		c.Status(code[0])
 	}

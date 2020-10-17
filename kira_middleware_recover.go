@@ -32,12 +32,8 @@ func (rc *Recover) Middleware(ctx *Context, next HandlerFunc) {
 		r := recover()
 		// We have a problem here
 		if r != nil {
-			headerName := ctx.Config().GetString("server.request_id", "X-Request-Id")
-
-			requestID := ctx.Request().Context().Value(headerName)
-
 			// log the error
-			ctx.Log().Errorf("%s %s", r, requestID)
+			ctx.Log().Errorf("%s", r)
 
 			writeHeaders(ctx)
 

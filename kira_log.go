@@ -9,11 +9,8 @@ import (
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 
-func setupLogger(config *config.Config) *log.Logger {
-	logger := log.New(
-		setupWriter(config),
-		setupFormatter(),
-	)
+func setupLogger(config *config.Config, w io.Writer, fields log.Fields) *log.Logger {
+	logger := log.New(w, setupFormatter(), fields)
 	logger.SetLevel(log.LevelStrings[config.GetString("log.level", "info")])
 
 	return logger
@@ -45,4 +42,8 @@ func setupFormatter() log.Formatter {
 	// TODO
 	// - Add color formatter
 	return log.NewDefaultFormatter()
+}
+
+func defaultLogFormat(config *config.Config) string {
+	return config.GetString("log.format", ":status :method :duration :request_id :path")
 }

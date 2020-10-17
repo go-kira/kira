@@ -1,8 +1,6 @@
 package kira
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 )
 
@@ -18,23 +16,14 @@ func NewRequestID() *RequestID {
 func (rq *RequestID) Middleware(ctx *Context, next HandlerFunc) {
 	headerName := ctx.Config().GetString("server.request_id", "X-Request-Id")
 
-	// Request ID
-	requestid := rq.random()
-
-	// Context
-	requestIDContext := context.WithValue(ctx.Request().Context(), headerName, requestid)
-
 	// Set header.
-	ctx.Response().Header().Set(headerName, requestid)
-
-	// Change the request with the new one with context.
-	ctx.SetRequest(ctx.Request().WithContext(requestIDContext))
+	ctx.Response().Header().Set(headerName, ctx.RequestID())
 
 	// Move to the next handler.
 	next(ctx)
 }
 
-// random return random string for request id
+// random return random string for request requestID
 func (rq *RequestID) random() string {
 	return uuid.New().String()
 }

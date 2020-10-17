@@ -1,7 +1,9 @@
 package kira
 
 import (
+	"github.com/google/uuid"
 	"net/http"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -91,12 +93,12 @@ func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Root context.
-		// TODO
-		//  - Set default values in the context.
-		//  - Like request id, csrf...
 		ctx := app.pool.Get().(*Context)
-		ctx.response = w
+		ctx.response = &responseWriter{w, ctx}
 		ctx.request = r
+		ctx.statusCode = http.StatusOK
+		ctx.requestID = uuid.New().String()
+		ctx.startAt = time.Now()
 
 		// Run the chain
 		handler(ctx)

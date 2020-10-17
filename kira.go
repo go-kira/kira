@@ -29,7 +29,7 @@ const (
 	GB = 1 << 30
 )
 
-// Map a type to represent map, this will be used alot in the internal code.
+// Map a type to represent map, this will be used alot in the internal statusCode.
 type Map map[string]interface{}
 
 // App hold the framework options
@@ -37,11 +37,13 @@ type App struct {
 	Routes      []*Route
 	Middlewares []Middleware
 	Router      *httprouter.Router
-	Log         *log.Logger
 	Configs     *config.Config
 	Env         string
 	// Not found handler
 	NotFoundHandler HandlerFunc
+
+	// Logger
+	logger *log.Logger
 
 	// Context pool
 	pool  *sync.Pool
@@ -53,14 +55,14 @@ func New() *App {
 	app := &App{}
 	app.Env = getEnv()
 	app.Configs = getConfig()
-	app.Log = setupLogger(app.Configs)
 	app.Router = httprouter.New()
+	app.logger = setupLogger(app.Configs, setupWriter(app.Configs), log.Fields{})
 
 	// Context pool
 	app.pool = &sync.Pool{
 		New: func() interface{} {
 			return &Context{
-				logger:  app.Log,
+				logger:  app.logger,
 				configs: app.Configs,
 				data:    make(map[string]interface{}),
 				env:     app.Env,

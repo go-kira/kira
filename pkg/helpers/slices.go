@@ -1,7 +1,7 @@
 package helpers
 
-// Diffrence -  returns the values in slice1 that are not present in any of the other slices.
-func Diffrence(slice []string, slice2 []string) []string {
+// Difference -  returns the values in slice1 that are not present in any of the other slices.
+func Difference(slice []string, slice2 []string) []string {
 	var result []string
 
 	// range over slice
