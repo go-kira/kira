@@ -58,13 +58,18 @@ func buildMiddleware(middleware Middleware, next HandlerFunc) HandlerFunc {
 	}
 }
 
-// buildRoute create the context for the route and attach the middlwares to it if exists.
+// buildRoute create the context for the route and attach the middlewares to it if exists.
 func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc {
 	// Route middlewares
 	if len(rm) > 0 {
 		for _, m := range rm {
 			handler = buildMiddleware(m, handler)
 		}
+	}
+
+	// Assign default middlewares to all handlers.
+	for _, defaultMiddleware := range defaultMiddlewares() {
+		handler = buildMiddleware(defaultMiddleware, handler)
 	}
 
 	// Global Middlewares
