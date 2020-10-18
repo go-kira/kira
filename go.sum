@@ -20,6 +20,8 @@ github.com/go-kira/log v0.0.0-20201018001106-3bc9c41adb64 h1:9YZkLf6rh35AFSZE3+s
 github.com/go-kira/log v0.0.0-20201018001106-3bc9c41adb64/go.mod h1:pZ9iDQiXacX85NI4pA4GqmfDwn7xiCDXzxnX6nSg5T8=
 github.com/go-kira/log v0.0.0-20201018001730-c2a3ff86a820 h1:mlYXjVyfrKrjCY0//wWJZxW6sBYXv46CjcCMSnFKL+s=
 github.com/go-kira/log v0.0.0-20201018001730-c2a3ff86a820/go.mod h1:pZ9iDQiXacX85NI4pA4GqmfDwn7xiCDXzxnX6nSg5T8=
+github.com/go-kira/log v0.0.0-20201018111807-e1ee387de5de h1:0Miya8MO8PoOWzXOkR3Rzj8HyumkEPdowrgr1GYvlFs=
+github.com/go-kira/log v0.0.0-20201018111807-e1ee387de5de/go.mod h1:pZ9iDQiXacX85NI4pA4GqmfDwn7xiCDXzxnX6nSg5T8=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.1.2 h1:EVhdT+1Kseyi1/pUmXKaFxYsDNy9RQYkMWRH68J/W7Y=
