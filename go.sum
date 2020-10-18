@@ -14,6 +14,8 @@ github.com/go-kira/log v0.0.0-20201017233740-e0ab4cef7afd h1:2htYOk/xlqQEDcvnEje
 github.com/go-kira/log v0.0.0-20201017233740-e0ab4cef7afd/go.mod h1:pZ9iDQiXacX85NI4pA4GqmfDwn7xiCDXzxnX6nSg5T8=
 github.com/go-kira/log v0.0.0-20201017234602-b0a9e9b4514a h1:LZdQHetQ2gwmlC32TWQ1kHHupo+lOzX7G7uEjd+b7r0=
 github.com/go-kira/log v0.0.0-20201017234602-b0a9e9b4514a/go.mod h1:pZ9iDQiXacX85NI4pA4GqmfDwn7xiCDXzxnX6nSg5T8=
+github.com/go-kira/log v0.0.0-20201018000656-addbec8e23af h1:VeU5dCXzA1rIGWlDQNv/oNNvJLZ49e9r1+jwCtA7oQU=
+github.com/go-kira/log v0.0.0-20201018000656-addbec8e23af/go.mod h1:pZ9iDQiXacX85NI4pA4GqmfDwn7xiCDXzxnX6nSg5T8=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.1.2 h1:EVhdT+1Kseyi1/pUmXKaFxYsDNy9RQYkMWRH68J/W7Y=
