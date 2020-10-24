@@ -1,0 +1,14 @@
+# app
+app.name = "Application Name..."
+app.version = "0.0.1"
+
+# database
+database.port = 1653
+
+# server
+server.port = 12.5
+server.tls = true
+server.acme = false
+
+# override
+override.value = "exmaple"

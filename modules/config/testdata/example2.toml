@@ -1,0 +1,8 @@
+string = "string"
+int = 1994
+float = 15.5
+bool = true
+
+
+# override
+override.value = "exmaple2"
