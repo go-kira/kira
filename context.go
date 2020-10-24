@@ -5,18 +5,10 @@ import (
 	"github.com/go-kira/kira/modules/log"
 	"net/http"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/go-kira/kira/modules/config"
 )
-
-// Context pool
-var contextPool = &sync.Pool{
-	New: func() interface{} {
-		return &Context{}
-	},
-}
 
 // HandlerFunc - Type to define context function
 type HandlerFunc func(*Context)

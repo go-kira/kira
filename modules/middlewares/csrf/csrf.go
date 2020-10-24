@@ -1,3 +1,4 @@
+// We will re-write this based on this resource: https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/09.1.html
 package csrf
 
 import (

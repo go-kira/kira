@@ -17,7 +17,6 @@ func (app *App) Use(middlewares ...Middleware) {
 }
 
 func defaultMiddlewares() (mds []Middleware) {
-	mds = append(mds, NewRecover())
 	mds = append(mds, NewRequestID())
 	mds = append(mds, NewLogger())
 

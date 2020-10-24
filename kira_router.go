@@ -1,11 +1,8 @@
 package kira
 
 import (
-	"github.com/google/uuid"
-	"net/http"
-	"time"
-
 	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 // Route represent a route.
@@ -46,6 +43,13 @@ func (app *App) RegisterRoutes() *httprouter.Router {
 		app.Router.NotFound = buildRoute(app, defaultNotFound, nil)
 	} else {
 		app.Router.NotFound = buildRoute(app, app.NotFoundHandler, nil)
+	}
+
+	// Handle panic
+	app.Router.PanicHandler = func(w http.ResponseWriter, r *http.Request, err interface{}) {
+		buildRoute(app, func(ctx *Context) {
+			defaultPanic(ctx, err)
+		}, nil)
 	}
 
 	return app.Router
@@ -96,15 +100,12 @@ func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc
 		ctx := app.pool.Get().(*Context)
 		ctx.response = &responseWriter{w, ctx}
 		ctx.request = r
-		ctx.statusCode = http.StatusOK
-		ctx.requestID = uuid.New().String()
-		ctx.startAt = time.Now()
 
 		// Run the chain
 		handler(ctx)
 
 		// Release the pool
-		contextPool.Put(ctx)
+		app.pool.Put(ctx)
 	}
 }
 

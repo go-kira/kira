@@ -7,9 +7,11 @@ package kira
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"net/http"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/go-kira/kira/modules/config"
 	"github.com/go-kira/kira/modules/log"
@@ -62,10 +64,13 @@ func New() *App {
 	app.pool = &sync.Pool{
 		New: func() interface{} {
 			return &Context{
-				logger:  app.logger,
-				configs: app.Configs,
-				data:    make(map[string]interface{}),
-				env:     app.Env,
+				logger:     app.logger,
+				configs:    app.Configs,
+				data:       make(map[string]interface{}),
+				env:        app.Env,
+				statusCode: http.StatusOK,
+				requestID:  uuid.New().String(),
+				startAt:    time.Now(),
 			}
 		},
 	}
