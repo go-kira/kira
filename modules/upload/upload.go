@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-kira/kira"
 	"github.com/go-kira/kira/modules/config"
-	"github.com/go-kira/kira/pkg/helpers"
+	"github.com/go-kira/kira/modules/helpers"
 )
 
 // MB - one MB.
