@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-kira/config"
+	"github.com/go-kira/kira/modules/config"
 )
 
 // getEnv for set the framework environment.

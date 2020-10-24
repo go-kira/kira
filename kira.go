@@ -11,8 +11,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/go-kira/config"
-	"github.com/go-kira/log"
+	"github.com/go-kira/kira/modules/config"
+	"github.com/go-kira/kira/modules/log"
 	"github.com/julienschmidt/httprouter"
 )
 

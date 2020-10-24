@@ -4,8 +4,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/go-kira/config"
-	"github.com/go-kira/log"
+	"github.com/go-kira/kira/modules/config"
+	"github.com/go-kira/kira/modules/log"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 

@@ -2,14 +2,13 @@ package kira
 
 import (
 	"fmt"
+	"github.com/go-kira/kira/modules/log"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
 
-	"github.com/go-kira/log"
-
-	"github.com/go-kira/config"
+	"github.com/go-kira/kira/modules/config"
 )
 
 // Context pool

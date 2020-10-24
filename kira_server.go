@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/go-kira/config"
+	"github.com/go-kira/kira/modules/config"
 )
 
 // StartServer - Start kira server
