@@ -2,7 +2,6 @@ package kira
 
 import (
 	"fmt"
-	"net/http"
 	"runtime"
 )
 
@@ -30,7 +29,7 @@ func defaultPanic(ctx *Context, err interface{}) {
 	} else {
 		ctx.Response().Header().Set("Content-Type", "text/html")
 	}
-	ctx.Status(http.StatusInternalServerError)
+	//ctx.Status(http.StatusInternalServerError)
 
 	// if the debug mode is enabled, add the stack to the error view
 	if ctx.Config().GetBool("app.debug", false) {
