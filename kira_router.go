@@ -47,9 +47,10 @@ func (app *App) RegisterRoutes() *httprouter.Router {
 
 	// Handle panic
 	app.Router.PanicHandler = func(w http.ResponseWriter, r *http.Request, err interface{}) {
-		buildRoute(app, func(ctx *Context) {
+		var panicHandler = func(ctx *Context) {
 			defaultPanic(ctx, err)
-		}, nil)
+		}
+		buildRoute(app, panicHandler, nil)(w, r)
 	}
 
 	return app.Router
@@ -81,16 +82,6 @@ func buildRoute(app *App, handler HandlerFunc, rm []Middleware) http.HandlerFunc
 	// Global Middlewares
 	if len(app.Middlewares) > 0 {
 		for _, m := range app.Middlewares {
-			// except := app.Configs.GetSliceString("excluded_middleware." + m.Name())
-			//
-			// // Move to the next router if the route is nil.
-			// if route == nil || helpers.Contains(except, "*") {
-			// 	continue
-			// }
-			//
-			// if !helpers.Contains(except, route.Path) {
-			// 	handler = middlewareHandler(m, handler)
-			// }
 			handler = buildMiddleware(m, handler)
 		}
 	}
